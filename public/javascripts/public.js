@@ -16,7 +16,11 @@ function SubmitForm(url, form, btn, callback) {
     		        $(btn).next().html(json.data[k]).show();
     		    }else{
         		    $('#'+k).addClass('has-error');
-        		    $('#'+k).next().html(json.data[k]).show();
+        		    if (json.data[k].hasOwnProperty('message')) {
+        		        $('#'+k).next().html(json.data[k]['message']).show();
+        		    }else{
+        		        $('#'+k).next().html(json.data[k]).show();
+        		    }
     		    }
     		}
     	}

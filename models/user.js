@@ -1,17 +1,18 @@
 var mongoose = require('mongoose')
       ,Schema = mongoose.Schema
       ,bcrypt = require('bcrypt');
-      
+
 userSchema = new Schema( {
-    email: String,
-    mobile: String,
-    username: String,
-    password: String,
+    email: {type:String,trim:true,lowercase:true,required:[true,"请输入您的邮箱"],validate:[buildUniqueValidator('email'),'这个邮箱已经注册过了，忘记了密码？']},
+    mobile: {type:String,trim:true,required:[true,'请输入您的手机'],match:[/^(1\d{10})?$/,'请输入正确的手机'],validate:[buildUniqueValidator('mobile'),'这个手机已经注册过了，忘记了密码？']},
+    username: {type:String,required:[true,'请输入您的姓名']},
+    password: {type:String,required:[true,'请输入登录密码']},
     salt: String,
-    isAdmin: Boolean,
+    isAdmin: {type:Boolean,default:false},
     created_at: { type: Date, default: Date.now },
     updated_at: { type: Date, default: Date.now }
 }),
+
 userSchema.methods.HashPassword = function (cb) {
     this.salt = bcrypt.genSaltSync(10);
     this.password = bcrypt.hashSync(this.password, this.salt);
@@ -71,3 +72,27 @@ userSchema.statics.NeedLoginPOST = function (req, res, next) {
 User = mongoose.model('User', userSchema);
 
 module.exports = User;
+
+function buildUniqueValidator(path) {
+    return function (value, respond) {
+        var model = this.model(this.constructor.modelName);
+        var query = buildQuery(path, value, this._id);
+        var callback = buildValidationCallback(respond);
+        model.findOne(query, callback);
+    };
+}
+
+function buildQuery(field, value, id) {
+    var query = { $and: [] };
+    var target = {};
+    target[field] = value;
+    query.$and.push({ _id: { $ne: id } });
+    query.$and.push(target);
+    return query;
+}
+
+function buildValidationCallback(respond) {
+    return function (err, document) {
+        respond(!document);
+    };
+}

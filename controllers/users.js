@@ -8,37 +8,21 @@ module.exports.controller = function(app) {
     });
   
     app.post('/register', function(req, res) {
-        var name = req.param('username');
-        var email = req.param('email');
-        var mobile = req.param('mobile');
-        var pass = req.param('password');
-        var data = {};
-        if(email.length==0){
-            data.email = '请输入您的邮箱';
-        }
-        if(mobile.length==0){
-            data.mobile = '请输入您的手机';
-        }
-        if(name.length==0||name.length>20){
-            data.username = '请输入您的姓名';
-        }
-        if(pass.length==0){
-            data.password = '请输入登录密码';
-        }
-        if(Object.keys(data).length>0){
-            res.send({success:false,data:data});
-        }else{
-            var user = new User({email:email, mobile:mobile, username:name, password:pass});
-            user.HashPassword();
-            user.save(function (err) {
-                if (err){
-                    data.error = '保存出错，'+err.message;
-                    res.send({success:false,data:data});
-                }else{
-                    res.send({success:true,data:user.id});
-                }
-            });
-        }
+        var user = new User({email:req.param('email'), mobile:req.param('mobile'), username:req.param('username'), password:req.param('password')});
+        user.validate(function(err) {
+            if (err) {
+                res.send({success:false,data:err.errors});
+            }else{
+                user.HashPassword();
+                user.save(function (err) {
+                    if (err){
+                        res.send({success:false,data:{error:'保存出错，'+err.message}});
+                    }else{
+                        res.send({success:true,data:user.id});
+                    }
+                });
+            }
+        });
     });
 
     app.get('/login', function(req, res) {

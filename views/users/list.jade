@@ -9,7 +9,7 @@ block content
     if users
         ul
             each u in users
-                li(id='#{u.id}') 姓名：#{u.username} 手机：#{u.mobile} 注册时间：
+                li(id='#{u.id}') 姓名：#{u.username} 手机：#{u.mobile} 邮箱：#{u.email} 注册时间：
                     span.timeSpan= u.created_at
                     最后登录：
                     span.timeSpan= u.updated_at
