@@ -1,0 +1,16 @@
+extends ../layout
+
+block content
+  h1= title
+  p Welcome to #{title}
+  #topic.content
+    if error
+        p= error
+    if topic
+        span.timeSpan= topic.updated_at
+        span.tags= topic.tags.join(',')
+        span.author= topic.author.username
+        a.btn.btn-info.btn-xs(href='/topic/edit/#{topic.id}') 修改文章
+        p!= topic.content.replace(/\n/g, '<br/>')
+    p
+        a.btn.btn-info(href='/topics') 返回列表

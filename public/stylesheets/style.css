@@ -1,0 +1,12 @@
+form.formLittle{
+    max-width: 240px;
+}
+form.formLarge{
+    max-width: 680px;
+}
+div.input-group{
+    margin: 8px 0 0 0;
+}
+span.error-block{
+    color: #a94442;font-size: 12px;display: none;
+}

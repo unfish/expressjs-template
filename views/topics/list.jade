@@ -1,0 +1,16 @@
+extends ../layout
+
+block content
+  h1= title
+  p Welcome to #{title}
+  #topiclist.content
+    a.btn.btn-info(href='/topics/add') 添加新文章
+    if error
+        p= error
+    if topics
+        ul
+            each t in topics
+                li(id='#{t.id}')
+                    a(href='/topic/#{t.id}')= t.title
+                    span.timeSpan= t.updated_at
+                    button.btn.btn-xs.btn-danger(onclick="AjaxPost('/topic/delete/#{t.id}',{},this,function(){$('##{t.id}').remove();});return false;") 删除

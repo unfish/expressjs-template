@@ -1,0 +1,119 @@
+var mongoose = require('mongoose')
+var User = require('../models/user');
+
+module.exports.controller = function(app) {
+    app.get('/register', function(req, res) {
+        res.render('users/register',{ title: 'Register' });
+    });
+  
+    app.post('/register', function(req, res) {
+        var name = req.param('username');
+        var email = req.param('email');
+        var mobile = req.param('mobile');
+        var pass = req.param('password');
+        var data = {};
+        if(email.length==0){
+            data.email = '请输入您的邮箱';
+        }
+        if(mobile.length==0){
+            data.mobile = '请输入您的手机';
+        }
+        if(name.length==0||name.length>20){
+            data.username = '请输入您的姓名';
+        }
+        if(pass.length==0){
+            data.password = '请输入登录密码';
+        }
+        if(Object.keys(data).length>0){
+            res.send({success:false,data:data});
+        }else{
+            var user = new User({email:email, mobile:mobile, username:name, password:pass});
+            user.HashPassword();
+            user.save(function (err) {
+                if (err){
+                    data.error = '保存出错，'+err.message;
+                    res.send({success:false,data:data});
+                }else{
+                    res.send({success:true,data:user.id});
+                }
+            });
+        }
+    });
+
+    app.get('/login', function(req, res) {
+        res.render('users/login',{ title: 'Login'});
+    });
+    
+    app.post('/login', function(req, res) {
+        var name = req.param('email');
+        var pass = req.param('password');
+        var data = {};
+        if(name.length==0||name.length>20){
+            data.email = '请输入您的邮箱或手机';
+        }
+        if(pass.length==0){
+            data.password = '请输入登录密码';
+        }
+        if(Object.keys(data).length>0){
+            res.send({success:false,data:data});
+        }else{
+            User.findOne({$or:[{email:name},{mobile:name}]}).sort('-created_at').exec(function (err, user) {
+                if (err || user==null) {
+                    data.email = '账号不存在';
+                    res.send({success:false,data:data});
+                }else{
+                    User.HashPassword(pass, user.salt, function(err, pass, salt) {
+                        if (pass!=user.password) {
+                            data.password = '密码错误';
+                            res.send({success:false,data:data});
+                        }else{
+                            user.updated_at = new Date();
+                            user.save(function (err) {
+                                if (err){
+                                    data.error = '保存出错，'+err.message;
+                                    res.send({success:false,data:data});
+                                }else{
+                                    user.GenCookie(function(err, cookie) {
+                                        res.cookie('loginCookie', cookie, { maxAge: 1000*60*60*24*30 });
+                                        res.send({success:true,data:user.id});
+                                    });
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+        }
+    });
+    
+    app.get('/users', User.ValidateCookieGET);
+    app.get('/users', function(req, res) {
+        User.find(function (err, users) {
+            if (err) {
+                res.render('users/list',{ title: 'Users List', error: err.message });
+            }
+            else{
+                res.render('users/list',{ title: 'Users List', users: users });
+            }
+        });
+    });
+    
+    app.post('/user/(.*)', User.ValidateCookiePOST);
+    app.post('/user/delete/:id', function(req, res) {
+        var id = req.params.id;
+        var data = {};
+        if(id==null || id.length==0){
+            data.error = '参数错误';
+            res.send({success:false,data:data});
+        }else{
+            User.findByIdAndRemove(id,function (err, user) {
+                if (err || user==null) {
+                    data.error = '用户不存在';
+                    res.send({success:false,data:data});
+                }else{
+                    res.send({success:true,data:user.id});
+                }
+            });
+        }
+    });
+}

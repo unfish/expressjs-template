@@ -1,0 +1,21 @@
+doctype 5
+html
+  head
+    meta(name="viewport",content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no")
+    title= title
+    link(rel='stylesheet', href='/stylesheets/bootstrap.min.css')
+    link(rel='stylesheet', href='/stylesheets/bootstrap-theme.min.css')
+    link(rel='stylesheet', href='/stylesheets/style.css')
+    script(type='text/javascript', src='/javascripts/jquery-2.0.3.min.js')
+    script(type='text/javascript', src='/javascripts/bootstrap.min.js')
+    script(type='text/javascript', src='/javascripts/moment_langs.min.js')
+    script(type='text/javascript', src='/javascripts/public.js')
+    block header
+  body
+    .container
+        block content
+        
+    block footer
+    
+    script(type='text/javascript').
+        $('.timeSpan').each(function(){$(this).html(moment($(this).html()).format('YYYY-MM-DD HH:mm'));});

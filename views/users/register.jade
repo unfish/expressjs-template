@@ -1,0 +1,26 @@
+extends ../layout
+
+block content
+  h1= title
+  p Welcome to #{title}
+  #register.content
+      form#formRegister.formLittle
+        #email.input-group
+            span.input-group-addon 邮　箱
+            input.form-control(type="text",name="email")
+        span.error-block
+        #mobile.input-group
+            span.input-group-addon 手　机
+            input.form-control(type="text",name="mobile")
+        span.error-block
+        #username.input-group
+            span.input-group-addon 姓　名
+            input.form-control(type="text",name="username")
+        span.error-block
+        #password.input-group
+            span.input-group-addon 密　码
+            input.form-control(type="password",name="password")
+        span.error-block
+        p
+        button.btn.btn-primary.btn-block(onclick="SubmitForm('/register','formRegister',this,function(id){location.href='/login';});return false;") 注册新用户
+        span.error-block

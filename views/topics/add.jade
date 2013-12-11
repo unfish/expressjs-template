@@ -1,0 +1,22 @@
+extends ../layout
+
+block content
+  h1= title
+  p Welcome to #{title}
+  #addtopic.content
+      form#formTopic.formLarge
+        #title.input-group
+            span.input-group-addon 标　题
+            input.form-control(type="text",name="title")
+        span.error-block
+        #tags.input-group
+            span.input-group-addon 关键字
+            input.form-control(type="text",name="tags")
+        span.error-block
+        #content.input-group
+            span.input-group-addon 内　容
+            textarea.form-control(name="content",rows="8")
+        span.error-block
+        p
+        button.btn.btn-primary.btn-block(onclick="SubmitForm('/topics','formTopic',this,function(id){location.href='/topic/'+id;});return false;") 保存
+        span.error-block

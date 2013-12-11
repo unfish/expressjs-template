@@ -1,0 +1,18 @@
+extends ../layout
+
+block content
+  h1= title
+  p Welcome to #{title}
+  #login.content
+    form#formLogin.formLittle
+        #email.input-group
+            span.input-group-addon 账　号
+            input.form-control(type="text",name="email")
+        span.error-block
+        #password.input-group
+            span.input-group-addon 密　码
+            input.form-control(type="password",name="password")
+        span.error-block
+        p
+        button.btn.btn-primary.btn-block(onclick="SubmitForm('/login','formLogin',this,function(){location.href='/users';});return false;") 登录
+        span.error-block
