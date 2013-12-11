@@ -14,3 +14,4 @@ block content
                     a(href='/topic/#{t.id}')= t.title
                     span.timeSpan= t.updated_at
                     button.btn.btn-xs.btn-danger(onclick="AjaxPost('/topic/delete/#{t.id}',{},this,function(){$('##{t.id}').remove();});return false;") 删除
+  a.btn.btn-link(href='/users') 用户列表

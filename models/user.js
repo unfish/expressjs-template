@@ -29,7 +29,8 @@ userSchema.methods.GenCookie = function (cb) {
     var pass = bcrypt.hashSync(this.id+"u$JeOIrBkuXotD5P", salt);
     if(cb) cb(null, this.id+'|'+salt+'|'+pass);
 }
-userSchema.statics.ValidateCookieGET = function (req, res, next) {
+
+userSchema.statics.ValidateCookie = function (req, res, next) {
     if (req.cookies.loginCookie) {
         var str = req.cookies.loginCookie.split('|');
         var uid = str[0];
@@ -39,40 +40,29 @@ userSchema.statics.ValidateCookieGET = function (req, res, next) {
             User.findById(uid, function(err, user) {
                 if(err){
                     res.clearCookie('loginCookie');
-                    res.redirect('/login');
                 }else{
                     req.user = user;
-                    next();
                 }
+                next();
             });
         }else{
             res.clearCookie('loginCookie');
-            res.redirect('/login');
+            next();
         }
+    }else{
+        next();
+    }
+}
+userSchema.statics.NeedLoginGET = function (req, res, next) {
+    if (req.user) {
+        next();
     }else{
         res.redirect('/login');
     }
 }
-userSchema.statics.ValidateCookiePOST = function (req, res, next) {
-    if (req.cookies.loginCookie) {
-        var str = req.cookies.loginCookie.split('|');
-        var uid = str[0];
-        var salt = str[1];
-        var pass = bcrypt.hashSync(uid+"u$JeOIrBkuXotD5P", salt);
-        if (pass==str[2]) {
-            User.findById(uid, function(err, user) {
-                if(err){
-                    res.clearCookie('loginCookie');
-                    res.send({success:false,data:{error:'您需要登录后才能执行该操作'}});
-                }else{
-                    req.user = user;
-                    next();
-                }
-            });
-        }else{
-            res.clearCookie('loginCookie');
-            res.send({success:false,data:{error:'您需要登录后才能执行该操作'}});
-        }
+userSchema.statics.NeedLoginPOST = function (req, res, next) {
+    if (req.user) {
+        next();
     }else{
         res.send({success:false,data:{error:'您需要登录后才能执行该操作'}});
     }

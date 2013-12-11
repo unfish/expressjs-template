@@ -14,13 +14,11 @@ module.exports.controller = function(app) {
         });
     });
     
-    app.get('/topics/add', User.ValidateCookieGET);
-    app.get('/topics/add', function(req, res) {
+    app.get('/topics/add', User.NeedLoginGET, function(req, res) {
         res.render('topics/add',{ title: 'Add Topic'});
     });
   
-    app.post('/topics', User.ValidateCookiePOST);
-    app.post('/topics', function(req, res) {
+    app.post('/topics', User.NeedLoginPOST, function(req, res) {
         var title = req.param('title');
         var tags = req.param('tags');
         var content = req.param('content');
@@ -49,7 +47,6 @@ module.exports.controller = function(app) {
         }
     });
 
-//    app.get('/topic/:id', User.ValidateCookieGET);
     app.get('/topic/:id', function(req, res) {
         var id = req.params.id;
         if(id==null || id.length==0){
@@ -65,8 +62,7 @@ module.exports.controller = function(app) {
         }
     });
 
-    app.get('/topic/edit/:id', User.ValidateCookieGET);
-    app.get('/topic/edit/:id', function(req, res) {
+    app.get('/topic/edit/:id', User.NeedLoginGET, function(req, res) {
         var id = req.params.id;
         if(id==null || id.length==0){
             res.render('topics/topic',{ title: '文章页面', error: '参数错误' });
@@ -85,8 +81,7 @@ module.exports.controller = function(app) {
         }
     });
     
-    app.post('/topic/(.+)', User.ValidateCookiePOST);
-    app.post('/topic/delete/:id', function(req, res) {
+    app.post('/topic/delete/:id', User.NeedLoginPOST, function(req, res) {
         var id = req.params.id;
         var data = {};
         if(id==null || id.length==0){
@@ -104,7 +99,7 @@ module.exports.controller = function(app) {
         }
     });
 
-    app.post('/topic/:id', function(req, res) {
+    app.post('/topic/:id', User.NeedLoginPOST, function(req, res) {
         var id = req.params.id;
         if(id==null || id.length==0){
             res.send({success:false,data:{error:'参数错误'}});

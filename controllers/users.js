@@ -2,6 +2,7 @@ var mongoose = require('mongoose')
 var User = require('../models/user');
 
 module.exports.controller = function(app) {
+
     app.get('/register', function(req, res) {
         res.render('users/register',{ title: 'Register' });
     });
@@ -86,8 +87,7 @@ module.exports.controller = function(app) {
         }
     });
     
-    app.get('/users', User.ValidateCookieGET);
-    app.get('/users', function(req, res) {
+    app.get('/users', User.NeedLoginGET, function(req, res) {
         User.find(function (err, users) {
             if (err) {
                 res.render('users/list',{ title: 'Users List', error: err.message });
@@ -98,18 +98,16 @@ module.exports.controller = function(app) {
         });
     });
     
-    app.post('/user/(.*)', User.ValidateCookiePOST);
-    app.post('/user/delete/:id', function(req, res) {
+    app.post('/user/delete/:id', User.NeedLoginPOST, function(req, res) {
         var id = req.params.id;
-        var data = {};
         if(id==null || id.length==0){
-            data.error = '参数错误';
-            res.send({success:false,data:data});
+            res.send({success:false,data:{error:'参数错误'}});
+        }else if(id==req.user.id){
+            res.send({success:false,data:{error:'您不能删除自己的账号'}});
         }else{
             User.findByIdAndRemove(id,function (err, user) {
                 if (err || user==null) {
-                    data.error = '用户不存在';
-                    res.send({success:false,data:data});
+                    res.send({success:false,data:{error:'用户不存在'}});
                 }else{
                     res.send({success:true,data:user.id});
                 }

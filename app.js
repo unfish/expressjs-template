@@ -28,6 +28,9 @@ app.use(express.session());
 app.use(app.router);
 app.use(express.static(path.join(__dirname, 'public')));
 
+var User = require('./models/user');
+app.all('*', User.ValidateCookie);
+    
 // dynamically include routes (Controller)
 fs.readdirSync('./controllers').forEach(function (file) {
   if(file.substr(-3) == '.js') {
