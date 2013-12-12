@@ -11,6 +11,9 @@ block content
         span.tags= topic.tags.join(',')
         span.author= topic.author.username
         a.btn.btn-info.btn-xs(href='/topic/edit/#{topic.id}') 修改文章
+        if topic.thumb
+            p
+                img(src='/file/#{topic.thumb}',width='200')
         p!= topic.content.replace(/\n/g, '<br/>')
     p
         a.btn.btn-info(href='/topics') 返回列表

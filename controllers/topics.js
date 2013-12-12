@@ -1,4 +1,5 @@
 var mongoose = require('mongoose')
+      ,Schema = mongoose.Schema
 var User = require('../models/user');
 var Topic = require('../models/topic');
 
@@ -19,7 +20,7 @@ module.exports.controller = function(app) {
     });
   
     app.post('/topics', User.NeedLoginPOST, function(req, res) {
-        var topic = new Topic({title:req.param('title'), tags:req.param('tags').length>0?req.param('tags').split(','):null, content:req.param('content'), author:req.user.id});
+        var topic = new Topic({title:req.param('title'), tags:req.param('tags').length>0?req.param('tags').split(','):null, content:req.param('content'), thumb:req.param('thumb'), author:req.user.id});
         topic.save(function (err) {
             if (err){
                 res.send({success:false,data:err.errors});
@@ -38,6 +39,8 @@ module.exports.controller = function(app) {
                 if (err || topic==null) {
                     res.render('topics/topic',{ title: '文章不存在', error: err.message });
                 }else{
+                    topic.viewCount++;
+                    topic.save();
                     res.render('topics/topic',{ title: topic.title, topic: topic });
                 }
             });
@@ -75,9 +78,10 @@ module.exports.controller = function(app) {
                     topic.title=req.param('title');
                     topic.tags=req.param('tags').length>0?req.param('tags').split(','):null;
                     topic.content=req.param('content');
+                    topic.thumb=req.param('thumb');
                     topic.save(function (err) {
                         if (err){
-                            res.send({success:false,data:err.errors});
+                            res.send({success:false,data:err});
                         }else{
                             res.send({success:true,data:topic.id});
                         }
@@ -96,6 +100,9 @@ module.exports.controller = function(app) {
                 if (err || topic==null) {
                     res.send({success:false,data:{error:'文章不存在'}});
                 }else{
+                    if (topic.thumb) {
+                        File.DeleteById(topic.thumb);
+                    }
                     res.send({success:true,data:topic.id});
                 }
             });

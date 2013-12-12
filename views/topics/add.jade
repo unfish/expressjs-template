@@ -1,5 +1,8 @@
 extends ../layout
 
+block header
+    script(type='text/javascript',src='/javascripts/plupload/plupload.full.min.js')
+    
 block content
   h1= title
   p Welcome to #{title}
@@ -13,6 +16,10 @@ block content
             span.input-group-addon 关键字
             input.form-control(type="text",name="tags")
         span.error-block
+        #thumb.input-group
+            span.input-group-addon 缩略图
+            input.form-control(type="text",name="thumb")
+        span.error-block
         #content.input-group
             span.input-group-addon 内　容
             textarea.form-control(name="content",rows="8")
@@ -20,3 +27,9 @@ block content
         p
         button.btn.btn-primary.btn-block(onclick="SubmitForm('/topics','formTopic',this,function(id){location.href='/topic/'+id;});return false;") 保存
         span.error-block
+
+block footer
+    script(type='text/javascript').
+        $(function(){
+            SetupPLUploadJS('thumb','');
+        });
