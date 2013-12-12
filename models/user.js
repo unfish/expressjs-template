@@ -3,8 +3,8 @@ var mongoose = require('mongoose')
       ,bcrypt = require('bcrypt');
 
 userSchema = new Schema( {
-    email: {type:String,trim:true,lowercase:true,required:[true,"请输入您的邮箱"],unique:true,validate:[buildUniqueValidator('email'),'这个邮箱已经注册过了，忘记了密码？']},
-    mobile: {type:String,trim:true,required:[true,'请输入您的手机'],unique:true,match:[/^(1\d{10})?$/,'请输入正确的手机'],validate:[buildUniqueValidator('mobile'),'这个手机已经注册过了，忘记了密码？']},
+    email: {type:[String],required:[true,"请输入您的邮箱"],unique:true,validate:[{validator:EmailArrayFormatValidator,msg:'请输入您的邮箱地址'},{validator:buildUniqueValidator('email'),msg:'这个邮箱已经注册过了，忘记了密码？'}]},
+    mobile: {type:[String],unique:true,validate:[{validator:MobileArrayFormatValidator,msg:'请输入您的手机号'},{validator:buildUniqueValidator('mobile'),msg:'这个手机已经注册过了，忘记了密码？'}]},
     username: {type:String,required:[true,'请输入您的姓名']},
     password: {type:String,required:[true,'请输入登录密码']},
     salt: String,
@@ -73,6 +73,26 @@ User = mongoose.model('User', userSchema);
 
 module.exports = User;
 
+function EmailArrayFormatValidator(value, next) {
+    var result = true;
+    for (var i=0;i<value.length;i++) {
+        var email = value[i].replace(/(^\s*)|(\s*$)/g, "").toLowerCase();
+        value[i] = email;
+        var regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+        result = result && regex.test(email);
+    }
+    next(result);
+}
+function MobileArrayFormatValidator(value, next) {
+    var result = true;
+    for (var i=0;i<value.length;i++) {
+        var mobile = value[i].replace(/(^\s*)|(\s*$)/g, "");
+        value[i] = mobile;
+        var regex = /^(1\d{10})$/;
+        result = result && regex.test(mobile);
+    }
+    next(result);
+}
 function buildUniqueValidator(path) {
     return function (value, respond) {
         var model = this.model(this.constructor.modelName);
@@ -84,9 +104,13 @@ function buildUniqueValidator(path) {
 
 function buildQuery(field, value, id) {
     var query = { $and: [] };
-    var target = {};
-    target[field] = value;
     query.$and.push({ _id: { $ne: id } });
+    var target = {};
+    if( Object.prototype.toString.call( value ) === '[object Array]' ) {
+        target[field] = {$in:value};
+    }else{
+        target[field] = value;
+    }
     query.$and.push(target);
     return query;
 }

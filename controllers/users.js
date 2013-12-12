@@ -8,7 +8,9 @@ module.exports.controller = function(app) {
     });
   
     app.post('/register', function(req, res) {
-        var user = new User({email:req.param('email'), mobile:req.param('mobile'), username:req.param('username'), password:req.param('password')});
+        var user = new User({email:[], mobile:[], username:req.param('username'), password:req.param('password')});
+        user.email.push(req.param('email'));
+        user.mobile.push(req.param('mobile'));
         user.validate(function(err) {
             if (err) {
                 res.send({success:false,data:err.errors});
