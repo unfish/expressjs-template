@@ -1,0 +1,17 @@
+extends ../layout
+
+block content
+  h1= title
+  p Welcome to #{title}
+  #userlist.content
+    if error
+        p= error
+    if users
+        ul
+            each u in users
+                li(id='#{u.id}') 姓名：#{u.username} 手机：#{u.mobile} 邮箱：#{u.email} 注册时间：
+                    span.timeSpan= u.created_at
+                    最后登录：
+                    span.timeSpan= u.updated_at
+                    button.btn.btn-xs.btn-danger(onclick="AjaxPost('/admin/users/delete/#{u.id}',{},this,function(){$('##{u.id}').remove();});return false;") 删除
+  a.btn.btn-link(href='/') 返回首页

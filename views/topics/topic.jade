@@ -7,13 +7,35 @@ block content
     if error
         p= error
     if topic
+        | 发表于：
         span.timeSpan= topic.updated_at
+        | &nbsp;&nbsp;&nbsp;&nbsp;最后回复：
+        span.timeSpan= topic.comment_at
+        | &nbsp;&nbsp;&nbsp;&nbsp;
         span.tags= topic.tags.join(',')
+        | &nbsp;&nbsp;&nbsp;&nbsp;作者：
         span.author= topic.author.username
+        | &nbsp;&nbsp;&nbsp;&nbsp;
         a.btn.btn-info.btn-xs(href='/topic/edit/#{topic.id}') 修改文章
         if topic.thumb
             p
                 img(src='/file/#{topic.thumb}',width='200')
         p!= topic.content.replace(/\n/g, '<br/>')
+        hr
+        .list-group
+            each c in comments
+                .list-group-item
+                    h4.list-group-item-heading!= c.content.replace(/\n/g, '<br/>')
+                    p.list-group-item-text
+                        span.timeSpan= c.created_at
+        form#formComment.formLarge
+            #content.input-group
+                span.input-group-addon 内　容
+                textarea.form-control(name="content",rows="8")
+            span.error-block
+            p
+            button.btn.btn-primary(onclick="SubmitForm('/topic/comment/#{topic.id}','formComment',this,function(data){$('#comments').append('<li class=\"comment\">'+data.content+'</li>');$('#formComment').reset();});return false;") 添加评论
+            span.error-block
+    br
     p
         a.btn.btn-info(href='/topics') 返回列表

@@ -1,0 +1,26 @@
+extends ../layout
+
+block content
+  h1= title
+  p Welcome to #{title}
+  #infoedit.content
+      form#formInfo.formLarge
+        #email.input-group
+            span.input-group-addon 邮　箱
+            input.form-control(type="text",name="email",value="#{user.email}")
+        span.error-block
+        #mobile.input-group
+            span.input-group-addon 手　机
+            input.form-control(type="text",name="mobile",value="#{user.mobile}")
+        span.error-block
+        #username.input-group
+            span.input-group-addon 姓　名
+            input.form-control(type="text",name="username",value="#{user.username}")
+        span.error-block
+        #password.input-group
+            span.input-group-addon 密　码
+            input.form-control(type="password",name="password")
+        span.error-block
+        p
+        button.btn.btn-primary.btn-block(onclick="SubmitForm('/user/edit','formInfo',this,function(id){location.href='/';});return false;") 保存修改
+        span.error-block

@@ -2,6 +2,7 @@ var mongoose = require('mongoose')
       ,Schema = mongoose.Schema
 var User = require('../models/user');
 var Topic = require('../models/topic');
+var Comment = require('../models/comment');
 
 module.exports.controller = function(app) {
     app.get('/topics', function(req, res) {
@@ -41,7 +42,13 @@ module.exports.controller = function(app) {
                 }else{
                     topic.viewCount++;
                     topic.save();
-                    res.render('topics/topic',{ title: topic.title, topic: topic });
+                    Comment.find({'topic':topic.id}, function(err, comments) {
+                        if (comments) {
+                            res.render('topics/topic',{ title: topic.title, topic: topic, comments:comments });
+                        }else{
+                            res.render('topics/topic',{ title: topic.title, topic: topic, comments:[] });
+                        }
+                    });
                 }
             });
         }
@@ -81,9 +88,35 @@ module.exports.controller = function(app) {
                     topic.thumb=req.param('thumb');
                     topic.save(function (err) {
                         if (err){
-                            res.send({success:false,data:err});
+                            res.send({success:false,data:err.errors});
                         }else{
                             res.send({success:true,data:topic.id});
+                        }
+                    });
+                }
+            });
+        }
+    });
+
+    app.post('/topic/comment/:id', function(req, res) {
+        var id = req.params.id;
+        if(id==null || id.length==0){
+            res.send({success:false,data:{error:'参数错误'}});
+        }else{
+            Topic.findById(id, function (err, topic) {
+                if (err || topic==null) {
+                    res.send({success:false,data:{error:'文章不存在'}});
+                }else{
+                    var comment = new Comment({content:req.param('content'),topic:topic.id});
+                    comment.author=req.user?req.user.id:null;
+                    comment.save(function (err) {
+                        if (err){
+                            res.send({success:false,data:err.errors});
+                        }else{
+                            topic.commentCount++;
+                            topic.comment_at = Date.now;
+                            topic.save();
+                            res.send({success:true,data:comment});
                         }
                     });
                 }
