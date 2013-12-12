@@ -78,31 +78,26 @@ module.exports.controller = function(app) {
         res.redirect('/');
     });
 
-    app.get('/users', User.NeedLoginGET, function(req, res) {
-        User.find(function (err, users) {
-            if (err) {
-                res.render('users/list',{ title: 'Users List', error: err.message });
-            }
-            else{
-                res.render('users/list',{ title: 'Users List', users: users });
+    app.get('/user', User.NeedLoginGET, function(req, res) {
+        res.render('users/edit',{ title: 'User Info', user: req.user });
+    });
+    
+    app.post('/user/edit', User.NeedLoginPOST, function(req, res) {
+        var user = req.user;
+        user.username=req.param('username');
+        user.email = req.param('email').split(',');
+        user.mobile = req.param('mobile').split(',');
+        if (req.param('password').length>0) {
+            user.password = req.param('password');
+            user.HashPassword();
+        }
+        user.save(function (err) {
+            if (err){
+                res.send({success:false,data:err.errors});
+            }else{
+                res.send({success:true,data:user.id});
             }
         });
     });
-    
-    app.post('/user/delete/:id', User.NeedLoginPOST, function(req, res) {
-        var id = req.params.id;
-        if(id==null || id.length==0){
-            res.send({success:false,data:{error:'参数错误'}});
-        }else if(id==req.user.id){
-            res.send({success:false,data:{error:'您不能删除自己的账号'}});
-        }else{
-            User.findByIdAndRemove(id,function (err, user) {
-                if (err || user==null) {
-                    res.send({success:false,data:{error:'用户不存在'}});
-                }else{
-                    res.send({success:true,data:user.id});
-                }
-            });
-        }
-    });
+
 }

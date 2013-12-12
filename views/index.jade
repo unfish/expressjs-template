@@ -5,6 +5,7 @@ block content
   p Welcome to #{title}
   if user
       p 当前用户：#{user.username}
+          a.btn.btn-link(href='/user') 修改信息
           a.btn.btn-link(href='/logout') 退 出
   else
       a.btn.btn-link(href='/login') 登 录

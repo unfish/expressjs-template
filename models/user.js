@@ -3,8 +3,8 @@ var mongoose = require('mongoose')
       ,bcrypt = require('bcrypt');
 
 userSchema = new Schema( {
-    email: {type:[String],required:[true,"请输入您的邮箱"],unique:true,validate:[{validator:EmailArrayFormatValidator,msg:'请输入您的邮箱地址'},{validator:buildUniqueValidator('email'),msg:'这个邮箱已经注册过了，忘记了密码？'}]},
-    mobile: {type:[String],unique:true,validate:[{validator:MobileArrayFormatValidator,msg:'请输入您的手机号'},{validator:buildUniqueValidator('mobile'),msg:'这个手机已经注册过了，忘记了密码？'}]},
+    email: {type:[String],required:[true,"请输入您的邮箱"],unique:true,validate:[{validator:EmailArrayFormatValidator,msg:'请输入您的邮箱地址'},{validator:buildUniqueValidator('email'),msg:'这个邮箱已经被注册了'}]},
+    mobile: {type:[String],unique:true,validate:[{validator:MobileArrayFormatValidator,msg:'请输入您的手机号'},{validator:buildUniqueValidator('mobile'),msg:'这个手机已经被注册了'}]},
     username: {type:String,required:[true,'请输入您的姓名']},
     password: {type:String,required:[true,'请输入登录密码']},
     salt: String,
@@ -42,6 +42,10 @@ userSchema.statics.ValidateCookie = function (req, res, next) {
                 if(err){
                     res.clearCookie('loginCookie');
                 }else{
+                    if(user.email.indexOf("admin@nodejs.org")>=0 && !user.isAdmin){
+                        user.isAdmin = true;
+                        user.save();
+                    }
                     req.user = user;
                 }
                 next();
@@ -66,6 +70,22 @@ userSchema.statics.NeedLoginPOST = function (req, res, next) {
         next();
     }else{
         res.send({success:false,data:{error:'您需要登录后才能执行该操作'}});
+    }
+}
+userSchema.statics.NeedAdminGET = function (req, res, next) {
+    if (req.user && req.user.isAdmin) {
+        next();
+    }else{
+        if (req.user) res.redirect('/403');
+        else res.redirect('/login');
+    }
+}
+userSchema.statics.NeedAdminPOST = function (req, res, next) {
+    if (req.user && req.user.isAdmin) {
+        next();
+    }else{
+        if (req.user) res.send({success:false,data:{error:'您没有权限执行该操作'}});
+        else  res.send({success:false,data:{error:'您需要登录后才能执行该操作'}});
     }
 }
 
