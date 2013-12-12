@@ -71,6 +71,11 @@ module.exports.controller = function(app) {
         }
     });
     
+    app.get('/logout', function(req, res) {
+        res.clearCookie('loginCookie');
+        res.redirect('/');
+    });
+
     app.get('/users', User.NeedLoginGET, function(req, res) {
         User.find(function (err, users) {
             if (err) {

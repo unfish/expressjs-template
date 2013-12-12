@@ -3,8 +3,8 @@ var mongoose = require('mongoose')
       ,bcrypt = require('bcrypt');
 
 userSchema = new Schema( {
-    email: {type:String,trim:true,lowercase:true,required:[true,"请输入您的邮箱"],validate:[buildUniqueValidator('email'),'这个邮箱已经注册过了，忘记了密码？']},
-    mobile: {type:String,trim:true,required:[true,'请输入您的手机'],match:[/^(1\d{10})?$/,'请输入正确的手机'],validate:[buildUniqueValidator('mobile'),'这个手机已经注册过了，忘记了密码？']},
+    email: {type:String,trim:true,lowercase:true,required:[true,"请输入您的邮箱"],unique:true,validate:[buildUniqueValidator('email'),'这个邮箱已经注册过了，忘记了密码？']},
+    mobile: {type:String,trim:true,required:[true,'请输入您的手机'],unique:true,match:[/^(1\d{10})?$/,'请输入正确的手机'],validate:[buildUniqueValidator('mobile'),'这个手机已经注册过了，忘记了密码？']},
     username: {type:String,required:[true,'请输入您的姓名']},
     password: {type:String,required:[true,'请输入登录密码']},
     salt: String,

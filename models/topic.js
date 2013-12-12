@@ -2,10 +2,10 @@ var mongoose = require('mongoose')
       ,Schema = mongoose.Schema
       
 topicSchema = new Schema( {
-    title: String,
-    author: { type: mongoose.Schema.Types.ObjectId, ref: 'User'},
-    content: String,
-    tags: [String],
+    title: {type:String,required:[true,"请输入文章的标题"]},
+    author: { type: mongoose.Schema.Types.ObjectId, ref: 'User',required:true},
+    content: {type:String,required:[true,'请输入文章的内容']},
+    tags: {type:[String],required:[true,'请输入文章的关键字']},
     created_at: { type: Date, default: Date.now },
     updated_at: { type: Date, default: Date.now }
 }),

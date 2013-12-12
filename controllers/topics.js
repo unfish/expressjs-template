@@ -19,32 +19,14 @@ module.exports.controller = function(app) {
     });
   
     app.post('/topics', User.NeedLoginPOST, function(req, res) {
-        var title = req.param('title');
-        var tags = req.param('tags');
-        var content = req.param('content');
-        var data = {};
-        if(title.length==0){
-            data.title = '请输入文章标题';
-        }
-        if(tags.length==0){
-            data.tags = '请输入文章的关键字';
-        }
-        if(content.length==0){
-            data.content = '请输入文章内容';
-        }
-        if(Object.keys(data).length>0){
-            res.send({success:false,data:data});
-        }else{
-            var topic = new Topic({title:title, tags:tags.split(','), content:content, author:req.user.id});
-            topic.save(function (err) {
-                if (err){
-                    data.error = '保存出错，'+err.message;
-                    res.send({success:false,data:data});
-                }else{
-                    res.send({success:true,data:topic.id});
-                }
-            });
-        }
+        var topic = new Topic({title:req.param('title'), tags:req.param('tags').length>0?req.param('tags').split(','):null, content:req.param('content'), author:req.user.id});
+        topic.save(function (err) {
+            if (err){
+                res.send({success:false,data:err.errors});
+            }else{
+                res.send({success:true,data:topic.id});
+            }
+        });
     });
 
     app.get('/topic/:id', function(req, res) {
@@ -81,24 +63,6 @@ module.exports.controller = function(app) {
         }
     });
     
-    app.post('/topic/delete/:id', User.NeedLoginPOST, function(req, res) {
-        var id = req.params.id;
-        var data = {};
-        if(id==null || id.length==0){
-            data.error = '参数错误';
-            res.send({success:false,data:data});
-        }else{
-            Topic.findByIdAndRemove(id,function (err, topic) {
-                if (err || topic==null) {
-                    data.error = '文章不存在';
-                    res.send({success:false,data:data});
-                }else{
-                    res.send({success:true,data:topic.id});
-                }
-            });
-        }
-    });
-
     app.post('/topic/:id', User.NeedLoginPOST, function(req, res) {
         var id = req.params.id;
         if(id==null || id.length==0){
@@ -108,34 +72,31 @@ module.exports.controller = function(app) {
                 if (err || topic==null) {
                     res.send({success:false,data:{error:'文章不存在'}});
                 }else{
-                    var title = req.param('title');
-                    var tags = req.param('tags');
-                    var content = req.param('content');
-                    var data = {};
-                    if(title.length==0){
-                        data.title = '请输入文章标题';
-                    }
-                    if(tags.length==0){
-                        data.tags = '请输入文章的关键字';
-                    }
-                    if(content.length==0){
-                        data.content = '请输入文章内容';
-                    }
-                    if(Object.keys(data).length>0){
-                        res.send({success:false,data:data});
-                    }else{
-                        topic.title=title;
-                        topic.tags=tags.split(',');
-                        topic.content=content
-                        topic.save(function (err) {
-                            if (err){
-                                data.error = '保存出错，'+err.message;
-                                res.send({success:false,data:data});
-                            }else{
-                                res.send({success:true,data:topic.id});
-                            }
-                        });
-                    }
+                    topic.title=req.param('title');
+                    topic.tags=req.param('tags').length>0?req.param('tags').split(','):null;
+                    topic.content=req.param('content');
+                    topic.save(function (err) {
+                        if (err){
+                            res.send({success:false,data:err.errors});
+                        }else{
+                            res.send({success:true,data:topic.id});
+                        }
+                    });
+                }
+            });
+        }
+    });
+
+    app.post('/topic/delete/:id', User.NeedLoginPOST, function(req, res) {
+        var id = req.params.id;
+        if(id==null || id.length==0){
+            res.send({success:false,data:{error:'参数错误'}});
+        }else{
+            Topic.findByIdAndRemove(id,function (err, topic) {
+                if (err || topic==null) {
+                    res.send({success:false,data:{error:'文章不存在'}});
+                }else{
+                    res.send({success:true,data:topic.id});
                 }
             });
         }
