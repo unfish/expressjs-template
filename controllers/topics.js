@@ -114,7 +114,7 @@ module.exports.controller = function(app) {
                             res.send({success:false,data:err.errors});
                         }else{
                             topic.commentCount++;
-                            topic.comment_at = Date.now;
+                            topic.comment_at = new Date();
                             topic.save();
                             res.send({success:true,data:comment});
                         }
@@ -137,6 +137,25 @@ module.exports.controller = function(app) {
                         File.DeleteById(topic.thumb);
                     }
                     res.send({success:true,data:topic.id});
+                }
+            });
+        }
+    });
+
+    app.post('/topic/comment/delete/:id', User.NeedLoginPOST, function(req, res) {
+        var id = req.params.id;
+        if(id==null || id.length==0){
+            res.send({success:false,data:{error:'参数错误'}});
+        }else{
+            Comment.findByIdAndRemove(id,function (err, com) {
+                if (err || com==null) {
+                    res.send({success:false,data:{error:'评论不存在'}});
+                }else{
+                    Topic.findById(com.topic, function (err, topic) {
+                        topic.commentCount--;
+                        topic.save();
+                    });
+                    res.send({success:true,data:com.id});
                 }
             });
         }

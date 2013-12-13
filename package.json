@@ -10,6 +10,7 @@
     "jade": "*",
     "bcrypt": "*",
     "mongoose" : "*",
-    "gridfs-stream":"*"
+    "gridfs-stream":"*",
+    "eventproxy":"*"
   }
 }

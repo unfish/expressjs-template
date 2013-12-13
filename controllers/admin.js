@@ -1,15 +1,23 @@
 var mongoose = require('mongoose')
 var User = require('../models/user');
+var EventProxy = require('eventproxy');
 
 module.exports.controller = function(app) {
+    app.get('/admin', User.NeedAdminGET, function(req, res) {
+        var ep = EventProxy.create("topicCount", "userCount", function (topicCount, userCount) {
+            res.render('admin/index',{ title: 'Admin Page', userCount: userCount, topicCount:topicCount });
+        });
+        User.count({},function (err, count) {
+            ep.emit('userCount', count);
+        });
+        Topic.count({},function (err, count) {
+            ep.emit('topicCount', count);
+        });
+    });
+
     app.get('/admin/users', User.NeedAdminGET, function(req, res) {
-        User.find(function (err, users) {
-            if (err) {
-                res.render('admin/userlist',{ title: 'Users List', error: err.message });
-            }
-            else{
-                res.render('admin/userlist',{ title: 'Users List', users: users });
-            }
+        User.find({},function (err, users) {
+            res.render('admin/userlist',{ title: 'Users List', users: users, error:err });
         });
     });
 

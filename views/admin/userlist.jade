@@ -4,8 +4,6 @@ block content
   h1= title
   p Welcome to #{title}
   #userlist.content
-    if error
-        p= error
     if users
         ul
             each u in users

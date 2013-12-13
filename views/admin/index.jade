@@ -1,0 +1,8 @@
+extends ../layout
+
+block content
+  h1= title
+  p Welcome to #{title}
+  a.btn.btn-link(href='/admin/users') 用户列表(#{userCount}条)
+  a.btn.btn-link(href='/topics') 文章列表(#{topicCount}条)
+  a.btn.btn-link(href='/') 返回首页

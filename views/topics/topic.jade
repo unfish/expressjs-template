@@ -22,20 +22,28 @@ block content
                 img(src='/file/#{topic.thumb}',width='200')
         p!= topic.content.replace(/\n/g, '<br/>')
         hr
-        .list-group
+        #comments.list-group
             each c in comments
-                .list-group-item
+                div.list-group-item(id='#{c.id}')
                     h4.list-group-item-heading!= c.content.replace(/\n/g, '<br/>')
                     p.list-group-item-text
                         span.timeSpan= c.created_at
+                        button.btn.btn-xs.btn-danger(onclick="AjaxPost('/topic/comment/delete/#{c.id}',{},this,function(){$('##{c.id}').remove();});return false;") 删除
         form#formComment.formLarge
             #content.input-group
                 span.input-group-addon 内　容
                 textarea.form-control(name="content",rows="8")
             span.error-block
             p
-            button.btn.btn-primary(onclick="SubmitForm('/topic/comment/#{topic.id}','formComment',this,function(data){$('#comments').append('<li class=\"comment\">'+data.content+'</li>');$('#formComment').reset();});return false;") 添加评论
+            button.btn.btn-primary(onclick="SubmitForm('/topic/comment/#{topic.id}','formComment',this, InsertComment);return false;") 添加评论
             span.error-block
     br
     p
         a.btn.btn-info(href='/topics') 返回列表
+
+block footer
+    script(type='text/javascript').
+        function InsertComment(data){
+            $('#comments').append('<div class=\"list-group-item\" id=\"'+data._id+'\"><h4 class=\"list-group-item-heading\">'+data.content+'</h4><p class=\"list-group-item-text\"><span class=\"timeSpan\">'+moment(data.created_at).format('YYYY-MM-DD HH:mm')+'</span><button class=\"btn btn-xs btn-danger\" onclick=\"AjaxPost(\'/topic/comment/delete/'+data._id+'\',{},this,function(){$(\'#'+data._id+'\').remove();});return false;\">删除</button></p></div>');
+            $('#formComment')[0].reset();
+        }
