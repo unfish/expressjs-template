@@ -62,4 +62,7 @@ html
     script(type='text/javascript', src='/javascripts/moment_langs.min.js')
     script(type='text/javascript', src='/javascripts/public.js')
     script(type='text/javascript',src='/javascripts/admin.js')
+    if menu
+        script(type='text/javascript').
+            $(function(){$('li.li#{menu[0]}').addClass('active');$('li.li#{menu[1]}').addClass('active');});
     block script

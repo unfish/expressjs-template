@@ -10,7 +10,7 @@ module.exports.controller = function(app) {
         var query = User.find({}).sort('-created_on');
         var page = req.query.page||1;
         query.paginate({perPage: 20, delta: 3, page: page}, function(err, result) {
-            res.render('admin/users/list',{ pageTitle: '用户列表', pageTips:'注册用户共10000人，昨日注册200人，今日注册100人', users: result.results, pager:Pager.GetPager('?page={}', result), error:err });
+            res.render('admin/users/list',{ pageTitle: '用户列表', pageTips:'注册用户共10000人，昨日注册200人，今日注册100人', menu:['users','userlist'], users: result.results, pager:Pager.GetPager('?page={}', result), error:err });
         });
     });
 
