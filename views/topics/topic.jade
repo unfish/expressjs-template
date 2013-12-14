@@ -1,8 +1,7 @@
 extends ../layout
 
 block content
-  h1= title
-  p Welcome to #{title}
+  h1= pageTitle
   #topic.content
     if error
         p= error
@@ -41,7 +40,7 @@ block content
     p
         a.btn.btn-info(href='/topics') 返回列表
 
-block footer
+block script
     script(type='text/javascript').
         function InsertComment(data){
             $('#comments').append('<div class=\"list-group-item\" id=\"'+data._id+'\"><h4 class=\"list-group-item-heading\">'+data.content+'</h4><p class=\"list-group-item-text\"><span class=\"timeSpan\">'+moment(data.created_at).format('YYYY-MM-DD HH:mm')+'</span><button class=\"btn btn-xs btn-danger\" onclick=\"AjaxPost(\'/topic/comment/delete/'+data._id+'\',{},this,function(){$(\'#'+data._id+'\').remove();});return false;\">删除</button></p></div>');

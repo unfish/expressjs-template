@@ -3,16 +3,16 @@ var User = require('../models/user');
 module.exports.controller = function(app) {
 
     app.get('/register', function(req, res) {
-        res.render('users/register',{ title: 'Register' });
+        res.render('users/register',{ pageTitle: 'Register' });
     });
   
     app.post('/register', function(req, res) {
-        var user = new User({email:[], mobile:[], username:req.param('username'), password:req.param('password')});
+        var user = new User({email:[], mobile:[], username:req.param('username'), password:req.param('password'), lastlogin_ip:req.ip});
         user.email.push(req.param('email'));
         user.mobile.push(req.param('mobile'));
         user.validate(function(err) {
             if (err) {
-                res.send({success:false,data:err.errors});
+                res.send({success:false,data:err});
             }else{
                 user.HashPassword();
                 user.save(function (err) {
@@ -27,7 +27,7 @@ module.exports.controller = function(app) {
     });
 
     app.get('/login', function(req, res) {
-        res.render('users/login',{ title: 'Login'});
+        res.render('users/login',{ pageTitle: 'Login'});
     });
     
     app.post('/login', function(req, res) {
@@ -53,7 +53,8 @@ module.exports.controller = function(app) {
                             data.password = '密码错误';
                             res.send({success:false,data:data});
                         }else{
-                            user.updated_at = new Date();
+                            user.lastlogin_at = new Date();
+                            user.lastlogin_ip=req.ip;
                             user.save(function (err) {
                                 if (err){
                                     data.error = '保存出错，'+err.message;
@@ -78,7 +79,7 @@ module.exports.controller = function(app) {
     });
 
     app.get('/user', User.NeedLoginGET, function(req, res) {
-        res.render('users/edit',{ title: 'User Info', user: req.user });
+        res.render('users/edit',{ pageTitle: 'User Info', user: req.user });
     });
     
     app.post('/user/edit', User.NeedLoginPOST, function(req, res) {
@@ -92,7 +93,7 @@ module.exports.controller = function(app) {
         }
         user.save(function (err) {
             if (err){
-                res.send({success:false,data:err.errors});
+                res.send({success:false,data:err});
             }else{
                 res.send({success:true,data:user.id});
             }

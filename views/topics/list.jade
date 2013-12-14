@@ -1,8 +1,7 @@
 extends ../layout
 
 block content
-  h1= title
-  p Welcome to #{title}
+  h1= pageTitle
   #topiclist.content
     a.btn.btn-info(href='/topics/add') 添加新文章
     if error
@@ -13,5 +12,6 @@ block content
                 li(id='#{t.id}')
                     a(href='/topic/#{t.id}')= t.title
                     span.timeSpan= t.updated_at
+                    span.userSpan= t.author.username
                     button.btn.btn-xs.btn-danger(onclick="AjaxPost('/topic/delete/#{t.id}',{},this,function(){$('##{t.id}').remove();});return false;") 删除
   a.btn.btn-link(href='/users') 用户列表

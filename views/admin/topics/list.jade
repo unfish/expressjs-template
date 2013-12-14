@@ -1,0 +1,39 @@
+extends ../layout
+
+block content
+    nav.navbar.navbar-default
+        form.navbar-form.navbar-left(role="search")
+            .form-group
+                label.sr-only 搜索
+                input.form-control(type="text",placeholder="Search")
+            button.btn.btn-default(type="submit") 搜索
+    table.table.table-striped
+        thead
+            tr
+                th 标题
+                th 作者
+                th 发表时间
+                th 最后评论
+                th 操作
+        tbody
+            if topics
+                each t in topics
+                    tr(id='#{t.id}')
+                        td
+                            a(href='/topic/#{t.id}')= t.title
+                        td= t.author.username
+                        td
+                            span.timeSpan= t.created_at
+                        td
+                            span.timeSpan= t.comment_at
+                        td
+                            a.btn.btn-xs.btn-primary(href="/topic/edit/#{t.id}") 修改
+                            button.btn.btn-xs.btn-danger(onclick="return DeleteTopic('#{t.id}')") 删除
+    != pager
+
+block script
+    script(type='text/javascript').
+        function DeleteTopic(id){
+            AjaxPost('/admin/topics/delete/'+id,{},this,function(){$('#'+id).remove();});
+            return false;
+        }

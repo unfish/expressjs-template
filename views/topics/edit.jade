@@ -1,11 +1,7 @@
 extends ../layout
-
-block header
-    script(type='text/javascript',src='/javascripts/plupload/plupload.full.min.js')
     
 block content
-  h1= title
-  p Welcome to #{title}
+  h1= pageTitle
   #edittopic.content
       form#formTopic.formLarge
         #title.input-group
@@ -21,15 +17,19 @@ block content
             input.form-control(type="text",name="thumb",value="#{topic.thumb}")
         span.error-block
         #content.input-group
-            span.input-group-addon 内　容
-            textarea.form-control(name="content",rows="8")= topic.content
+            textarea#txtContent.form-control(name="content",style="height:300px")= topic.content
         span.error-block
         p
         button.btn.btn-primary.btn-block(onclick="SubmitForm('/topic/#{topic.id}','formTopic',this,function(id){location.href='/topic/'+id;});return false;") 保存
         span.error-block
-        
-block footer
+
+block script
+    script(type='text/javascript',src='/javascripts/plupload/plupload.full.min.js')
+    script(type='text/javascript',src='/javascripts/ueditor/ueditor.config.js')
+    script(type='text/javascript',src='/javascripts/ueditor/ueditor.all.min.js')
     script(type='text/javascript').
         $(function(){
             SetupPLUploadJS('thumb','#{topic.thumb}');
+            var editor = new UE.ui.Editor();
+            editor.render("txtContent");
         });

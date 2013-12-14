@@ -39,6 +39,12 @@ fs.readdirSync('./controllers').forEach(function (file) {
       route.controller(app);
   }
 });
+fs.readdirSync('./controllers/admin').forEach(function (file) {
+  if(file.substr(-3) == '.js') {
+      route = require('./controllers/admin/' + file);
+      route.controller(app);
+  }
+});
 
 // development only
 if ('development' == app.get('env')) {

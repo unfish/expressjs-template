@@ -1,8 +1,8 @@
 extends layout
 
 block content
-  h1= title
-  p Welcome to #{title}
+  h1= pageTitle
+  p Welcome to #{pageTitle}
   if user
       p 当前用户：#{user.username}
           a.btn.btn-link(href='/user') 修改信息

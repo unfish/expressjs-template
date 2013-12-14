@@ -1,23 +1,16 @@
-var mongoose = require('mongoose')
-var User = require('../models/user');
+var mongoose = require('mongoose');
+require('mongoose-query-paginate');
 var EventProxy = require('eventproxy');
+var User = require('../../models/user');
+var Pager = require('../../libs/pager');
 
 module.exports.controller = function(app) {
-    app.get('/admin', User.NeedAdminGET, function(req, res) {
-        var ep = EventProxy.create("topicCount", "userCount", function (topicCount, userCount) {
-            res.render('admin/index',{ title: 'Admin Page', userCount: userCount, topicCount:topicCount });
-        });
-        User.count({},function (err, count) {
-            ep.emit('userCount', count);
-        });
-        Topic.count({},function (err, count) {
-            ep.emit('topicCount', count);
-        });
-    });
 
     app.get('/admin/users', User.NeedAdminGET, function(req, res) {
-        User.find({},function (err, users) {
-            res.render('admin/userlist',{ title: 'Users List', users: users, error:err });
+        var query = User.find({}).sort('-created_on');
+        var page = req.query.page||1;
+        query.paginate({perPage: 20, delta: 3, page: page}, function(err, result) {
+            res.render('admin/users/list',{ pageTitle: '用户列表', pageTips:'注册用户共10000人，昨日注册200人，今日注册100人', users: result.results, pager:Pager.GetPager('?page={}', result), error:err });
         });
     });
 

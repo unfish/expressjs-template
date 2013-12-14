@@ -10,3 +10,6 @@ div.input-group{
 span.error-block{
     color: #a94442;font-size: 12px;display: none;
 }
+div.edui-default{
+    padding: 0;
+}

@@ -10,7 +10,9 @@ userSchema = new Schema( {
     salt: String,
     isAdmin: {type:Boolean,default:false},
     created_at: { type: Date, default: Date.now },
-    updated_at: { type: Date, default: Date.now }
+    updated_at: { type: Date, default: Date.now },
+    lastlogin_at: { type: Date, default: Date.now },
+    lastlogin_ip: { type: String }
 }),
 
 userSchema.methods.HashPassword = function (cb) {

@@ -11,17 +11,26 @@ function SubmitForm(url, form, btn, callback) {
     	if(json.success){
             callback(json.data);
     	}else{
-    		for(var k in json.data){
-    		    if (k=='error') {
-    		        $(btn).next().html(json.data[k]).show();
-    		    }else{
-        		    $('#'+k).addClass('has-error');
-        		    if (json.data[k].hasOwnProperty('message')) {
-        		        $('#'+k).next().html(json.data[k]['message']).show();
+    	    if(json.data.hasOwnProperty('errors')){
+        		for(var k in json.data.errors){
+            		    $('#'+k).addClass('has-error');
+            		    $('#'+k).next().html(json.data.errors[k]['message']).show();
+        		}
+    	    }else if (json.data.hasOwnProperty('error')||json.data.hasOwnProperty('message')) {
+    	        $(btn).next().html(json.data.error||json.data.message).show();
+    	    }else{
+        		for(var k in json.data){
+        		    if (k=='error') {
+        		        $(btn).next().html(json.data[k]).show();
         		    }else{
-        		        $('#'+k).next().html(json.data[k]).show();
+            		    $('#'+k).addClass('has-error');
+            		    if (json.data[k].hasOwnProperty('message')) {
+            		        $('#'+k).next().html(json.data[k]['message']).show();
+            		    }else{
+            		        $('#'+k).next().html(json.data[k]).show();
+            		    }
         		    }
-    		    }
+        		}
     		}
     	}
     }, 'json')
@@ -38,7 +47,13 @@ function AjaxPost(url, param, btn, callback) {
     	if(json.success){
             callback(json.data);
     	}else{
-    		alert(json.data.error);
+    	    if (json.data.hasOwnProperty('error')) {
+    	        alert(json.data.error);
+    	    }else if(json.data.hasOwnProperty('message')){
+    		    alert(json.data.message);
+    		}else{
+    		    alert(json.data);
+    		}
     	}
     }, 'json')
     .fail(ajaxError)

@@ -44,6 +44,32 @@ fileSchema.statics.UploadFile = function (req, res) {
     }
 }
 
+fileSchema.statics.UEditorUploadFile = function (req, res) {
+    if (req.files.upfile) {
+            var f = req.files.upfile;
+            var file = new File({filename:f.name, user:req.user.id, filesize:f.size, filemime:f.type});
+            file.save(function(err) {
+                if (err) {
+                    res.send({state:err.message});
+                }else{
+                    var writestream = gfs.createWriteStream({_id:file.id, chunk_size: 1024*4, content_type: f.type});
+                    fs.createReadStream(f.path).pipe(writestream);
+                    writestream.on('close', function (result) {
+                        fs.unlink(f.path, function(err) {
+                            if (err) {
+                                res.send({state:err.message});
+                            }else{
+                                res.send({url:'/file/' + file.id, title:f.name, original:f.name, state:'SUCCESS'});
+                            }
+                        });
+                    });
+                }
+            });
+    }else{
+        res.send('没有找到文件');
+    }
+}
+
 fileSchema.statics.DownloadFile = function (req, res) {
     var id=req.params.id;
     File.findById(id, function(err, file) {
