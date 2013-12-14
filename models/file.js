@@ -2,9 +2,10 @@ var mongoose = require('mongoose')
       ,Schema = mongoose.Schema
       ,fs = require('fs')
       ,Grid = require('gridfs-stream');
+var config = require('../libs/config');
 
 var gfs;
-var conn = mongoose.createConnection('mongodb://localhost/Files');
+var conn = mongoose.createConnection(config.DB.FileDB);
 conn.once('open', function () {
     gfs = Grid(conn.db, mongoose.mongo);
 })

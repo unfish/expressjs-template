@@ -76,7 +76,7 @@
         ,getMovieUrl:URL+"net/getMovie.ashx"                   //视频数据获取地址
 
         //工具栏上的所有的功能按钮和下拉框，可以在new编辑器的实例时选择自己需要的从新定义
-        ,toolbars:[            ['FullScreen', 'Source', '|', 'Bold', 'Italic', 'Underline', 'RemoveFormat', 'FormatMatch', '|', 'PastePlain', 'wordimage', '|', 'ForeColor', 'BackColor', 'InsertOrderedList', 'InsertUnorderedList', '|',                'Indent', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', '|','FontFamily', 'FontSize', '|',                'Link', 'Unlink', '|', 'Emotion', 'Horizontal', 'Spechars', '|', 'InsertImage', 'ImageNone', 'ImageLeft', 'ImageRight', 'ImageCenter', '|',                 'InsertTable', 'InsertRow', 'DeleteRow', 'InsertCol', 'DeleteCol', 'MergeCells']        ]        //当鼠标放在工具栏上时显示的tooltip提示,留空支持自动多语言配置，否则以配置值为准
+        ,toolbars:[            ['FullScreen', 'Source', '|', 'Bold', 'Italic', 'Underline', 'RemoveFormat', 'FormatMatch', '|', 'PastePlain', 'wordimage', '|', 'ForeColor', 'BackColor', 'InsertOrderedList', 'InsertUnorderedList', '|',                'Indent', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', '|','FontFamily', 'FontSize', '|',                'Link', 'Unlink', '|', 'Emotion', 'Horizontal', 'Spechars', '|', 'InsertImage', 'ImageNone', 'ImageLeft', 'ImageRight', 'ImageCenter', '|',                 'InsertTable', 'InsertRow', 'DeleteRow', 'InsertCol', 'DeleteCol', 'MergeCells', 'charts']        ]        //当鼠标放在工具栏上时显示的tooltip提示,留空支持自动多语言配置，否则以配置值为准
 //        ,labelMap:{
 //            'anchor':'', 'undo':''
 //        }

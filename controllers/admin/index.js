@@ -1,11 +1,13 @@
 var EventProxy = require('eventproxy');
 var User = require('../../models/user');
-var Topic = require('../../models/topic');
+var t = require('../../models/topic'),
+    Topic = t.Topic,
+    Comment = t.Comment;
 
 module.exports.controller = function(app) {
     app.get('/admin', User.NeedAdminGET, function(req, res) {
         var ep = EventProxy.create("topicCount", "userCount", function (topicCount, userCount) {
-            res.render('admin/index',{ pageTitle: '管理中心', pageTips: '欢迎登录管理后台，上次登录时间：<span class="timeSpan">'+req.user.lastlogin_at+'</span>，上次登录IP：'+req.user.lastlogin_ip, userCount: userCount, topicCount:topicCount });
+            res.render('admin/index',{ pageTitle: '管理中心', pageTips: '欢迎登录'+app.locals.Site.Title+'管理中心，上次登录时间：<span class="timeSpan">'+req.user.lastlogin_at+'</span>，上次登录IP：'+req.user.lastlogin_ip, userCount: userCount, topicCount:topicCount });
         });
         User.count({},function (err, count) {
             ep.emit('userCount', count);

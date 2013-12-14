@@ -2,7 +2,7 @@ doctype 5
 html
   head
     meta(name="viewport",content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no")
-    title= pageTitle
+    title= pageTitle +' - '+ Site.Title
     link(rel='stylesheet', href='/stylesheets/bootstrap.min.css')
     link(rel='stylesheet', href='/stylesheets/bootstrap-theme.min.css')
     link(rel='stylesheet', href='/stylesheets/bootstrap-docs.css')
@@ -18,9 +18,9 @@ html
                 a.navbar-brand(href="/admin") 管理中心
             nav.collapse.navbar-collapse.bs-navbar-collapse(role="navigation")
                 ul.nav.navbar-nav
-                    li.active
+                    li.liusers
                         a(href="/admin/users") 用户管理
-                    li
+                    li.litopics
                         a(href="/admin/topics") 文章管理
                 ul.nav.navbar-nav.navbar-right
                     li
@@ -35,19 +35,19 @@ html
             .bs-sidebar.hidden-print(role="complementary")
                 block leftmenu
                     ul.nav.bs-sidenav
-                        li.active
+                        li.liusers
                             a(href="javascript:;") 用户管理
                             ul.nav
-                                li.active
+                                li.liuserlist
                                     a(href="/admin/users") 用户列表
-                                li
+                                li.liuserstat
                                     a(href="/admin/users/statistic") 用户统计
-                        li
+                        li.litopics
                             a(href="javascript:;") 文章管理
                             ul.nav
-                                li
+                                li.litopiclist
                                     a(href="/admin/topics") 文章列表
-                                li
+                                li.licommentlist
                                     a(href="/admin/topics/comments") 评论列表
 
             .bs-content(role="main")
@@ -56,21 +56,7 @@ html
     footer.bs-footer(role="contentinfo")
             p Designed and built with all the love in the world by <a href="http://twitter.com/mdo" target="_blank">@mdo</a> and <a href="http://twitter.com/fat" target="_blank">@fat</a>        
             p Code licensed under <a href="http://www.apache.org/licenses/LICENSE-2.0" target="_blank">Apache License v2.0</a>, documentation under <a href="http://creativecommons.org/licenses/by/3.0/">CC BY 3.0</a>.
-            ul.footer-links
-              li Currently v3.0.3
-              li.muted &middot;
-              li
-                  a(href="../2.3.2/") Bootstrap 2.3.2 docs
-              li.muted &middot;
-              li
-                  a(href="../2.3.2/") Bootstrap 2.3.2 docs
-              li.muted &middot;
-              li
-                  a(href="../2.3.2/") Bootstrap 2.3.2 docs
-              li.muted &middot;
-              li
-                  a(href="../2.3.2/") Bootstrap 2.3.2 docs
-
+            
     script(type='text/javascript', src='/javascripts/jquery-2.0.3.min.js')
     script(type='text/javascript', src='/javascripts/bootstrap.min.js')
     script(type='text/javascript', src='/javascripts/moment_langs.min.js')

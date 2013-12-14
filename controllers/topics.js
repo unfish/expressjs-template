@@ -1,8 +1,9 @@
 var mongoose = require('mongoose')
       ,Schema = mongoose.Schema
 var User = require('../models/user');
-var Topic = require('../models/topic');
-var Comment = require('../models/comment');
+var t = require('../models/topic'),
+    Topic = t.Topic,
+    Comment = t.Comment;
 
 module.exports.controller = function(app) {
     app.get('/topics', function(req, res) {

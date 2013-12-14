@@ -7,6 +7,7 @@ var express = require('express');
 var http = require('http');
 var path = require('path');
 var fs = require('fs');
+var config = require('./libs/config');
 
 var app = express();
 
@@ -25,9 +26,11 @@ app.use(express.session());
 app.use(app.router);
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.locals(config);
+
 // database connection
 var mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/mydb');
+mongoose.connect(config.DB.MongoDB);
 
 var User = require('./models/user');
 app.all('*', User.ValidateCookie);

@@ -42,17 +42,6 @@ body {
   text-align: center;
   border-top: 1px solid #e5e5e5;
 }
-.footer-links {
-  margin: 10px 0;
-  padding-left: 0;
-}
-.footer-links li {
-  display: inline;
-  padding: 0 2px;
-}
-.footer-links li:first-child {
-  padding-left: 0;
-}
 
 .bs-docs-home,
 .bs-header {
@@ -84,7 +73,7 @@ body {
     padding: 0 15px;height: 100%;overflow: hidden;
 }
 .bs-content{
-    width: auto;height: 100%;overflow: scroll;padding-left: 15px;
+    width: auto;height: 100%;overflow: scroll;padding-left: 15px;padding-top: 30px;
 }
 .bs-sidebar{
     width: 200px;height: 100%;
@@ -173,16 +162,14 @@ body {
   display: none; /* Hide by default, but at >768px, show it */
   margin-bottom: 8px;
 }
+.bs-sidebar .nav>.active>.nav {
+  display: block;
+}
 .bs-sidebar .nav .nav > li > a {
   padding-top:    3px;
   padding-bottom: 3px;
   padding-left: 30px;
   font-size: 90%;
-}
-
-/* Space things out */
-div[role="main"] {
-  padding-top: 30px;
 }
 
 /* Janky fix for preventing navbar from overlapping */
@@ -191,57 +178,3 @@ h1[id] {
   margin-top: -45px;
 }
 
-/* Utility classes table  */
-.bs-table th small,
-.responsive-utilities th small {
-  display: block;
-  font-weight: normal;
-  color: #999;
-}
-.responsive-utilities tbody th {
-  font-weight: normal;
-}
-.responsive-utilities td {
-  text-align: center;
-}
-.responsive-utilities td.is-visible {
-  color: #468847;
-  background-color: #dff0d8 !important;
-}
-.responsive-utilities td.is-hidden {
-  color: #ccc;
-  background-color: #f9f9f9 !important;
-}
-
-.visible-on .col-xs-6 .hidden-xs,
-.visible-on .col-xs-6 .hidden-sm,
-.visible-on .col-xs-6 .hidden-md,
-.visible-on .col-xs-6 .hidden-lg,
-.hidden-on .col-xs-6 .hidden-xs,
-.hidden-on .col-xs-6 .hidden-sm,
-.hidden-on .col-xs-6 .hidden-md,
-.hidden-on .col-xs-6 .hidden-lg {
-  color: #999;
-  border: 1px solid #ddd;
-}
-.visible-on .col-xs-6 .visible-xs,
-.visible-on .col-xs-6 .visible-sm,
-.visible-on .col-xs-6 .visible-md,
-.visible-on .col-xs-6 .visible-lg,
-.hidden-on .col-xs-6 .visible-xs,
-.hidden-on .col-xs-6 .visible-sm,
-.hidden-on .col-xs-6 .visible-md,
-.hidden-on .col-xs-6 .visible-lg {
-  color: #468847;
-  background-color: #dff0d8;
-  border: 1px solid #d6e9c6;
-}
-
-/* Pseudo :focus state for showing how it looks in the docs */
-#focusedInput {
-  border-color: rgba(82,168,236,.8);
-  outline: 0;
-  outline: thin dotted \9; /* IE6-9 */
-  -moz-box-shadow: 0 0 8px rgba(82,168,236,.6);
-       box-shadow: 0 0 8px rgba(82,168,236,.6);
-}
