@@ -16,11 +16,11 @@ module.exports.controller = function(app) {
   });
 
   app.get('/404', function(req, res) {
-      res.render('other/404', { pageTitle: 'Express' });
+      res.status(404).render('other/404', { bannerTitle: 'Oops! 页面没有找到' });
   });
 
   app.get('/403', function(req, res) {
-      res.render('other/403', { pageTitle: 'Express', });
+      res.status(403).render('other/403', { bannerTitle: 'Oops! 您没有权限打开该页面', });
   });
 
   app.post('/file', User.NeedLoginPOST, File.UploadFile);
