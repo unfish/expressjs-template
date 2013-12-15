@@ -1,20 +1,34 @@
 var mongoose = require('mongoose')
-      ,Schema = mongoose.Schema
+      ,Schema = mongoose.Schema;
+require('mongoose-query-paginate');
 var User = require('../models/user');
 var t = require('../models/topic'),
     Topic = t.Topic,
     Comment = t.Comment;
+var Pager = require('../libs/pager');
 
 module.exports.controller = function(app) {
     app.get('/topics', function(req, res) {
-        Topic.find({}).populate('author').sort('-created_on').exec(function (err, topics) {
-            console.log(topics);
-            res.render('topics/list',{ pageTitle: '文章列表', topics: topics, error: err});
+        res.redirect(301, '/topics/new');
+    });
+    app.get('/topics/new', function(req, res) {
+        var query = Topic.find({}).populate('author thumb').sort('-created_on');
+        var page = req.query.page||1;
+        query.paginate({perPage: 20, delta: 3, page: page}, function(err, result) {
+            res.render('topics/list',{ pageTitle: '最新文章', menu:['news'], topics: result.results, pager:Pager.GetPager('?page={}', result), error:err });
         });
     });
-    
+
+    app.get('/topics/hot', function(req, res) {
+        var query = Topic.find({}).populate('author thumb').sort('-created_on');
+        var page = req.query.page||1;
+        query.paginate({perPage: 20, delta: 3, page: page}, function(err, result) {
+            res.render('topics/list',{ pageTitle: '热门文章', menu:['hots'], topics: result.results, pager:Pager.GetPager('?page={}', result), error:err });
+        });
+    });
+
     app.get('/topics/add', User.NeedLoginGET, function(req, res) {
-        res.render('topics/add',{ pageTitle: 'Add Topic'});
+        res.render('topics/add',{ pageTitle: '发表新文章', menu:['add']});
     });
   
     app.post('/topics', User.NeedLoginPOST, function(req, res) {
@@ -40,7 +54,7 @@ module.exports.controller = function(app) {
                     topic.viewCount++;
                     topic.save();
                     Comment.find({'topic':topic.id}, function(err, comments) {
-                        res.render('topics/topic',{ pageTitle: topic.title, topic: topic, comments:comments });
+                        res.render('topics/topic',{ pageTitle: topic.title, pageTips:topic.summary, menu:['news'], topic: topic, comments:comments });
                     });
                 }
             });

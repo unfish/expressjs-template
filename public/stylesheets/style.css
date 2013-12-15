@@ -13,3 +13,6 @@ span.error-block{
 div.edui-default{
     padding: 0;
 }
+.bs-content .media-object{
+    width: 100px;height: 100px;overflow: hidden;background-repeat: no-repeat;background-size: cover;background-position: center;border: 1px solid #bbdaef;
+}

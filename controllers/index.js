@@ -1,9 +1,18 @@
+require('mongoose-query-paginate');
 var User = require('../models/user');
+var t = require('../models/topic'),
+    Topic = t.Topic,
+    Comment = t.Comment;
 var File = require('../models/file');
+var Pager = require('../libs/pager');
 
 module.exports.controller = function(app) {
   app.get('/', function(req, res) {
-      res.render('index', { pageTitle: 'Express', user:req.user });
+        var query = Topic.find({}).populate('author thumb').sort('-created_on');
+        var page = req.query.page||1;
+        query.paginate({perPage: 20, delta: 3, page: page}, function(err, result) {
+            res.render('index',{ bannerTitle: '今日热点', pageTips:'<a href="#">玉兔号月球车成功驶上月面 六轮着地留下印迹</a>', topics: result.results, pager:Pager.GetPager('?page={}', result), error:err });
+        });
   });
 
   app.get('/404', function(req, res) {
@@ -22,5 +31,5 @@ module.exports.controller = function(app) {
   app.post('/file/ueditor/fetch', User.NeedLoginPOST, function(req, res) {
       res.send('');
   });
-  app.get('/file/:id', File.DownloadFile);
+  app.get('/file/:id/:filename', File.GetFile);
 }

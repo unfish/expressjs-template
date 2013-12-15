@@ -65,6 +65,9 @@ body {
   font-weight: 300;
   line-height: 1.5;
 }
+.bs-header a{
+    color: #cdbfe3;
+}
 .bs-header .container {
   position: relative;
 }
@@ -86,7 +89,7 @@ body {
     text-align: left;
   }
   .bs-header h1 {
-    font-size: 60px;
+    font-size: 40px;
     line-height: 1;
   }
   .bs-footer {
@@ -97,12 +100,6 @@ body {
   }
 }
 
-@media (min-width: 992px) {
-  .bs-header h1,
-  .bs-header p {
-    margin-right: 380px;
-  }
-}
 @media (max-width: 950px) {
   /* Widen the fixed sidebar again */
   .bs-sidebar{

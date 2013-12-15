@@ -2,17 +2,53 @@ doctype 5
 html
   head
     meta(name="viewport",content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no")
-    title= pageTitle+' - '+Site.Title
+    title= pageTitle?(pageTitle+' - '+Site.Title):Site.Title
     meta(name="keywords")= pageKeywords||Site.Keywords
     meta(name="description")= pageDescription||Site.Description
     link(rel='stylesheet', href='/stylesheets/bootstrap.min.css')
     link(rel='stylesheet', href='/stylesheets/bootstrap-theme.min.css')
+    link(rel='stylesheet', href='/stylesheets/bootstrap-docs.css')
     link(rel='stylesheet', href='/stylesheets/style.css')
+    style(type='text/css') .bs-content{margin-left:0;}
   body
-    .container
-        block content
+    header.navbar.navbar-inverse.navbar-fixed-top.bs-docs-nav(role="banner")
+            .navbar-header
+                button.navbar-toggle(type="button",data-toggle="collapse",data-target=".bs-navbar-collapse")
+                    span.sr-only Toggle navigation
+                    span.icon-bar
+                    span.icon-bar
+                    span.icon-bar
+                a.navbar-brand(href="/")= Site.Title
+            nav.collapse.navbar-collapse.bs-navbar-collapse(role="navigation")
+                ul.nav.navbar-nav
+                    li.linews
+                        a(href="/topics/new") 最新文章
+                    li.lihots
+                        a(href="/topics/hot") 热门文章
+                ul.nav.navbar-nav.navbar-right
+                    if user
+                        li.liadd
+                            a(href='/topics/add') 发表文章
+                        li.liuser
+                            a(href='/user')= user.username
+                        li
+                            a(href='/logout') 退 出
+                    else
+                        li.lilogin
+                            a(href="/login")  登 录
+                        li.liregister
+                            a(href="/register") 注 册
+    .bs-header
+            h1= bannerTitle || pageTitle
+            p!= pageTips||Func.GetRandomWords()
+            
+    .bs-container
+            .bs-content(role="main")
+                block content
 
-    block footer
+    footer.bs-footer(role="contentinfo")
+            p Designed and built with all the love in the world by <a href="http://twitter.com/mdo" target="_blank">@mdo</a> and <a href="http://twitter.com/fat" target="_blank">@fat</a>        
+            p Code licensed under <a href="http://www.apache.org/licenses/LICENSE-2.0" target="_blank">Apache License v2.0</a>, documentation under <a href="http://creativecommons.org/licenses/by/3.0/">CC BY 3.0</a>.
 
     script(type='text/javascript', src='/javascripts/jquery-2.0.3.min.js')
     script(type='text/javascript', src='/javascripts/bootstrap.min.js')
@@ -24,4 +60,8 @@ html
                 $(this).html(moment($(this).html()).format('YYYY-MM-DD HH:mm'));
             });
         });
+    if menu
+        script(type='text/javascript').
+            $(function(){$('li.li#{menu[0]}').addClass('active');});
+
     block script

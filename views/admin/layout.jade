@@ -2,7 +2,7 @@ doctype 5
 html
   head
     meta(name="viewport",content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no")
-    title= pageTitle +' - '+ Site.Title
+    title= pageTitle?(pageTitle+' - '+Site.Title):Site.Title
     link(rel='stylesheet', href='/stylesheets/bootstrap.min.css')
     link(rel='stylesheet', href='/stylesheets/bootstrap-theme.min.css')
     link(rel='stylesheet', href='/stylesheets/bootstrap-docs.css')
@@ -28,8 +28,8 @@ html
                     li
                         a(href="/logout") 退出登录
     .bs-header
-            h1= pageTitle
-            p!= pageTips
+            h1= bannerTitle || pageTitle
+            p!= pageTips||Func.GetRandomWords()
             
     .bs-container
             .bs-sidebar.hidden-print(role="complementary")

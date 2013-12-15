@@ -9,9 +9,11 @@
     "express": "3.4.6",
     "jade": "*",
     "bcrypt": "*",
+    "request": "*",
     "mongoose" : "*",
     "mongoose-query-paginate":"*",
     "gridfs-stream":"*",
+    "async":"*",
     "eventproxy":"*"
   }
 }

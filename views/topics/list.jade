@@ -1,17 +1,19 @@
 extends ../layout
 
 block content
-  h1= pageTitle
   #topiclist.content
-    a.btn.btn-info(href='/topics/add') 添加新文章
     if error
         p= error
     if topics
-        ul
-            each t in topics
-                li(id='#{t.id}')
-                    a(href='/topic/#{t.id}')= t.title
-                    span.timeSpan= t.updated_at
-                    span.userSpan= t.author.username
-                    button.btn.btn-xs.btn-danger(onclick="AjaxPost('/topic/delete/#{t.id}',{},this,function(){$('##{t.id}').remove();});return false;") 删除
-  a.btn.btn-link(href='/users') 用户列表
+        each t in topics
+            .media
+                a.pull-left(href='/topic/#{t.id}')
+                    .media-object(style='background-image:url(/file/#{t.thumb.id}/#{t.thumb.filename});')
+                div.media-body
+                    h4.media-heading
+                        a(href='/topic/#{t.id}')= t.title
+                    p= t.summary
+                    p
+                        span.timeSpan= t.updated_at
+
+        != pager

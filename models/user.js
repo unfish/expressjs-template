@@ -65,7 +65,7 @@ userSchema.statics.ValidateCookie = function (req, res, next) {
         var pass = bcrypt.hashSync(uid+"u$JeOIrBkuXotD5P", salt);
         if (pass==str[2]) {
             User.findById(uid, function(err, user) {
-                if(err){
+                if(err||!user){
                     res.clearCookie('loginCookie');
                 }else{
                     log.userid = uid;
@@ -74,6 +74,7 @@ userSchema.statics.ValidateCookie = function (req, res, next) {
                         user.save();
                     }
                     req.user = user;
+                    res.locals.user = user;
                 }
                 log.save();
                 next();
