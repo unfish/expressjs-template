@@ -8,6 +8,7 @@ var http = require('http');
 var path = require('path');
 var fs = require('fs');
 var config = require('./libs/config');
+var gl = require('./libs/global');
 
 var app = express();
 
@@ -26,11 +27,13 @@ app.use(express.session());
 app.use(app.router);
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.locals(config);
+//set Site and Func global to views
+app.locals.Site = config.Site;
+app.locals.Func = gl.Func;
 
 // database connection
 var mongoose = require('mongoose');
-mongoose.connect(config.DB.MongoDB);
+mongoose.connect(config.DB.DataDB);
 
 var User = require('./models/user');
 app.all('*', User.ValidateCookie);

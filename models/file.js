@@ -8,7 +8,7 @@ var gfs;
 var conn = mongoose.createConnection(config.DB.FileDB);
 conn.once('open', function () {
     gfs = Grid(conn.db, mongoose.mongo);
-})
+});
 
 fileSchema = new Schema( {
     filename: String,
@@ -17,7 +17,7 @@ fileSchema = new Schema( {
     filemime: String,
     refCount: {type:Number, default:0 },
     created_at: { type: Date, default: Date.now }
-}),
+});
 
 fileSchema.statics.UploadFile = function (req, res) {
     if (req.files.file) {
@@ -43,7 +43,7 @@ fileSchema.statics.UploadFile = function (req, res) {
     }else{
         res.send('没有找到文件');
     }
-}
+};
 
 fileSchema.statics.UEditorUploadFile = function (req, res) {
     if (req.files.upfile) {
@@ -69,7 +69,7 @@ fileSchema.statics.UEditorUploadFile = function (req, res) {
     }else{
         res.send('没有找到文件');
     }
-}
+};
 
 fileSchema.statics.DownloadFile = function (req, res) {
     var id=req.params.id;
@@ -88,12 +88,12 @@ fileSchema.statics.DownloadFile = function (req, res) {
             }
         }
     });
-}
+};
 
 fileSchema.statics.DeleteById = function (id) {
     File.remove({ _id: id });
     gfs.remove({_id:id});
-}
+};
 
 File = mongoose.model('File', fileSchema);
 

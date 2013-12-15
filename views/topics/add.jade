@@ -25,12 +25,5 @@ block content
         span.error-block
 
 block script
-    script(type='text/javascript',src='/javascripts/plupload/plupload.full.min.js')
-    script(type='text/javascript',src='/javascripts/ueditor/ueditor.config.js')
-    script(type='text/javascript',src='/javascripts/ueditor/ueditor.all.min.js')
-    script(type='text/javascript').
-        $(function(){
-            SetupPLUploadJS('thumb','');
-            var editor = new UE.ui.Editor();
-            editor.render("txtContent");
-        });
+    !=Func.UsePLUpload('thumb', '')
+    !=Func.UseUEditor('txtContent')

@@ -12,7 +12,7 @@ topicSchema = new Schema( {
     created_at: { type: Date, default: Date.now },
     updated_at: { type: Date, default: Date.now },
     comment_at: { type: Date, default: new Date(2000,1,1) }
-}),
+});
 
 Topic = mongoose.model('Topic', topicSchema);
 
@@ -21,7 +21,7 @@ commentSchema = new Schema( {
     topic: { type: mongoose.Schema.Types.ObjectId, ref: 'Topic',required: true, index: true },
     content: {type:String,required:[true,'请输入评论的内容']},
     created_at: { type: Date, default: Date.now },
-}),
+});
 
 Comment = mongoose.model('Comment', commentSchema);
 

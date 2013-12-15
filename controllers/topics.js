@@ -9,7 +9,7 @@ module.exports.controller = function(app) {
     app.get('/topics', function(req, res) {
         Topic.find({}).populate('author').sort('-created_on').exec(function (err, topics) {
             console.log(topics);
-            res.render('topics/list',{ pageTitle: 'Topics List', topics: topics, error: err});
+            res.render('topics/list',{ pageTitle: '文章列表', topics: topics, error: err});
         });
     });
     
@@ -31,11 +31,11 @@ module.exports.controller = function(app) {
     app.get('/topic/:id', function(req, res) {
         var id = req.params.id;
         if(id==null || id.length==0){
-            res.render('topics/topic',{ pageTitle: '文章页面', error: '参数错误' });
+            res.redirect('/404');
         }else{
             Topic.findById(id).populate('author').exec(function (err, topic) {
                 if (err || topic==null) {
-                    res.render('topics/topic',{ pageTitle: '文章不存在', error: err.message });
+                    res.redirect('/404');
                 }else{
                     topic.viewCount++;
                     topic.save();
@@ -50,16 +50,16 @@ module.exports.controller = function(app) {
     app.get('/topic/edit/:id', User.NeedLoginGET, function(req, res) {
         var id = req.params.id;
         if(id==null || id.length==0){
-            res.render('topics/topic',{ pageTitle: '文章页面', error: '参数错误' });
+            res.redirect('/404');
         }else{
             Topic.findById(id).exec(function (err, topic) {
                 if (err || topic==null) {
-                    res.render('topics/topic',{ pageTitle: '文章不存在', error: err.message });
+                    res.redirect('/404');
                 }else{
                     if (topic.author!=req.user.id) {
-                        res.render('topics/topic',{ pageTitle: '权限错误', error: '您只能修改自己的文章' });
+                        res.redirect('/403');
                     }else{
-                        res.render('topics/edit',{ pageTitle: 'Edit Topic', topic: topic  });
+                        res.render('topics/edit',{ pageTitle: '修改文章', topic: topic  });
                     }
                 }
             });

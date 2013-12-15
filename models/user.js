@@ -1,6 +1,24 @@
 var mongoose = require('mongoose')
       ,Schema = mongoose.Schema
       ,bcrypt = require('bcrypt');
+var config = require('../libs/config');
+
+var conn = mongoose.createConnection(config.DB.LogDB);
+accessLogSchema = new Schema( {
+    method: String,
+    query: Schema.Types.Mixed,
+    form: Schema.Types.Mixed,
+    userid: String,
+    userip: String,
+    created_at: { type: Date, default: Date.now },
+    originalUrl: String,
+    fresh:Boolean,
+    stale:Boolean,
+    xhr:Boolean,
+    static:Boolean,
+    referer:String
+});
+AccessLog = conn.model('AccessLog', accessLogSchema);
 
 userSchema = new Schema( {
     email: {type:[String],required:[true,"请输入您的邮箱"],unique:true,validate:[{validator:EmailArrayFormatValidator,msg:'请输入您的邮箱地址'},{validator:buildUniqueValidator('email'),msg:'这个邮箱已经被注册了'}]},
@@ -13,27 +31,33 @@ userSchema = new Schema( {
     updated_at: { type: Date, default: Date.now },
     lastlogin_at: { type: Date, default: Date.now },
     lastlogin_ip: { type: String }
-}),
+});
 
 userSchema.methods.HashPassword = function (cb) {
     this.salt = bcrypt.genSaltSync(10);
     this.password = bcrypt.hashSync(this.password, this.salt);
     if(cb) cb(null, this);
-}
+};
+
 userSchema.statics.HashPassword = function (pass, salt, cb) {
     if (salt==null) {
         salt = bcrypt.genSaltSync(10);
     }
     pass = bcrypt.hashSync(pass, salt);
     if(cb) cb(null, pass, salt);
-}
+};
+
 userSchema.methods.GenCookie = function (cb) {
     var salt = bcrypt.genSaltSync(10);
     var pass = bcrypt.hashSync(this.id+"u$JeOIrBkuXotD5P", salt);
     if(cb) cb(null, this.id+'|'+salt+'|'+pass);
-}
+};
 
+var staticPath = /^\/(images|javascripts|stylesheets|uploads)\//i
 userSchema.statics.ValidateCookie = function (req, res, next) {
+    var log = new AccessLog({
+        method:req.route.method, query:req.query, form:req.body, userip:req.ip, originalUrl:req.originalUrl,fresh:req.fresh,stale:req.stale,xhr:req.xhr, referer:req.header('Referer'), userid:'', static:staticPath.test(req.originalUrl)
+    });
     if (req.cookies.loginCookie) {
         var str = req.cookies.loginCookie.split('|');
         var uid = str[0];
@@ -44,36 +68,41 @@ userSchema.statics.ValidateCookie = function (req, res, next) {
                 if(err){
                     res.clearCookie('loginCookie');
                 }else{
+                    log.userid = uid;
                     if(user.email.indexOf("admin@nodejs.org")>=0 && !user.isAdmin){
                         user.isAdmin = true;
                         user.save();
                     }
                     req.user = user;
                 }
+                log.save();
                 next();
             });
         }else{
             res.clearCookie('loginCookie');
+            log.save();
             next();
         }
     }else{
+        log.save();
         next();
     }
-}
+};
+
 userSchema.statics.NeedLoginGET = function (req, res, next) {
     if (req.user) {
         next();
     }else{
         res.redirect('/login');
     }
-}
+};
 userSchema.statics.NeedLoginPOST = function (req, res, next) {
     if (req.user) {
         next();
     }else{
         res.send({success:false,data:{error:'您需要登录后才能执行该操作'}});
     }
-}
+};
 userSchema.statics.NeedAdminGET = function (req, res, next) {
     if (req.user && req.user.isAdmin) {
         next();
@@ -81,7 +110,7 @@ userSchema.statics.NeedAdminGET = function (req, res, next) {
         if (req.user) res.redirect('/403');
         else res.redirect('/login');
     }
-}
+};
 userSchema.statics.NeedAdminPOST = function (req, res, next) {
     if (req.user && req.user.isAdmin) {
         next();
@@ -89,7 +118,7 @@ userSchema.statics.NeedAdminPOST = function (req, res, next) {
         if (req.user) res.send({success:false,data:{error:'您没有权限执行该操作'}});
         else  res.send({success:false,data:{error:'您需要登录后才能执行该操作'}});
     }
-}
+};
 
 User = mongoose.model('User', userSchema);
 
