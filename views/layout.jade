@@ -27,6 +27,9 @@ html
                         a(href="/topics/hot") 热门文章
                 ul.nav.navbar-nav.navbar-right
                     if user
+                        if user.isAdmin
+                            li
+                                a(href='/admin') 管理后台
                         li.liadd
                             a(href='/topics/add') 发表文章
                         li.liuser

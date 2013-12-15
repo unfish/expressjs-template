@@ -26,7 +26,11 @@ html
                     li
                         a(href="/") 网站首页
                     li
-                        a(href="/logout") 退出登录
+                        a(href='/topics/add') 发表文章
+                    li
+                        a(href='/user')= user.username
+                    li
+                        a(href="/logout") 退 出
     .bs-header
             h1= bannerTitle || pageTitle
             p!= pageTips||Func.GetRandomWords()
