@@ -100,6 +100,7 @@ function ProcessArticle(art, callback) {
         art.content = $.html($('div.introduction p'))+$('div.content').html();
         //分拆各个字段
     }
+    art.updated_at = art.created_at;
     art.save();
     //有必要的话，每个页面间隔几秒再抓下一页
     sleep.sleep(1);
