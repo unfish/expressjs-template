@@ -31,7 +31,7 @@ function ProcessListPage(data) {
               var title = li.title_show;
               var logo = li.logo;
               var summary = li.hometext_show_short;
-              var date = Date.parse(li.time);
+              var date = Date.parse(li.time.replace(/-/g, '/'));
               console.log("["+title+"]("+href+")");
               if (href.indexOf('http:')==0) {
                   //检查链接是否抓过，并保存新页面信息
