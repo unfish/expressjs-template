@@ -12,7 +12,7 @@ module.exports.controller = function(app) {
         res.redirect(301, '/topics/new');
     });
     app.get('/topics/new', function(req, res) {
-        var query = Topic.find({}).populate('author thumb').sort('-created_on');
+        var query = Topic.find({}).populate('author thumb').sort('-created_at');
         var page = req.query.page||1;
         query.paginate({perPage: 20, delta: 3, page: page}, function(err, result) {
             res.render('topics/list',{ pageTitle: '最新文章', menu:['news'], topics: result.results, pager:Pager.GetPager('?page={}', result), error:err });
@@ -20,7 +20,7 @@ module.exports.controller = function(app) {
     });
 
     app.get('/topics/hot', function(req, res) {
-        var query = Topic.find({}).populate('author thumb').sort('-created_on');
+        var query = Topic.find({}).populate('author thumb').sort('-comment_at');
         var page = req.query.page||1;
         query.paginate({perPage: 20, delta: 3, page: page}, function(err, result) {
             res.render('topics/list',{ pageTitle: '热门文章', menu:['hots'], topics: result.results, pager:Pager.GetPager('?page={}', result), error:err });

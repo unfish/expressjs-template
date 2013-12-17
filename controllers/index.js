@@ -8,7 +8,7 @@ var Pager = require('../libs/pager');
 
 module.exports.controller = function(app) {
   app.get('/', function(req, res) {
-        var query = Topic.find({}).populate('author thumb').sort('-created_on');
+        var query = Topic.find({}).populate('author thumb').sort('-created_at');
         var page = req.query.page||1;
         query.paginate({perPage: 20, delta: 3, page: page}, function(err, result) {
             res.render('index',{ bannerTitle: '今日热点', pageTips:'<a href="#">玉兔号月球车成功驶上月面 六轮着地留下印迹</a>', topics: result.results, pager:Pager.GetPager('?page={}', result), error:err });
