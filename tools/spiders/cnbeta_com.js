@@ -3,6 +3,7 @@ var sleep = require('sleep');
 var async = require('async');
 var cheerio = require('cheerio');
 var sleep = require('sleep');
+var moment = require('moment');
 
 var Topic = require('../../models/topic').Topic;
 var page = 0;
@@ -31,7 +32,7 @@ function ProcessListPage(data) {
               var title = li.title_show;
               var logo = li.logo;
               var summary = li.hometext_show_short;
-              var date = Date.parse(li.time.replace(/-/g, '/'));
+              var date = moment(li.time);
               console.log("["+title+"]("+href+")");
               if (href.indexOf('http:')==0) {
                   //检查链接是否抓过，并保存新页面信息
@@ -74,7 +75,7 @@ function ProcessListPage(data) {
             page ++;
             console.log('Page '+page+' Finished!');
             //取下一页
-            if(page>10){ //找不到下一页，跳出队列
+            if(page>100){ //找不到下一页，跳出队列
                 cb();
             }else{
                 //找到下一页，递归抓取

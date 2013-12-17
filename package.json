@@ -16,6 +16,7 @@
     "async":"*",
     "cheerio":"*",
     "sleep":"*",
+    "moment":"*",
     "eventproxy":"*"
   }
 }
