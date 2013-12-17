@@ -37,7 +37,7 @@ function ProcessListPage(data) {
               if (href.indexOf('http:')==0) {
                   //检查链接是否抓过，并保存新页面信息
                   Topic.CreateTopic({pattern:'cnbeta_com',source:href,title:title,summary:summary,created_at:date}, function(err, article) {
-                              if (article && !article.Content) {
+                              if (article && (article.Content==null || article.content.length==0)) {
                                   File.findOne({remoteurl:logo}, function(err, file) {
                                     if (file) {
                                         article.thumb = file.id;
