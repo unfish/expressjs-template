@@ -23,5 +23,5 @@ block content
         span.error-block
 
 block script
-    !=Func.UsePLUpload('thumb', topic.thumb)
+    !=Func.UsePLUpload('thumb', topic.thumb==null?'':topic.thumb.id,topic.thumb==null?'':topic.thumb.filename)
     !=Func.UseUEditor('txtContent')

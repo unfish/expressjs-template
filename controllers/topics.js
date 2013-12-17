@@ -66,7 +66,7 @@ module.exports.controller = function(app) {
         if(id==null || id.length==0){
             res.redirect('/404');
         }else{
-            Topic.findById(id).exec(function (err, topic) {
+            Topic.findById(id).populate('thumb').exec(function (err, topic) {
                 if (err || topic==null) {
                     res.redirect('/404');
                 }else{
