@@ -75,7 +75,7 @@ function ProcessListPage(data) {
             page ++;
             console.log('Page '+page+' Finished!');
             //取下一页
-            if(page>100){ //找不到下一页，跳出队列
+            if(page>10){ //找不到下一页，跳出队列
                 cb();
             }else{
                 //找到下一页，递归抓取
