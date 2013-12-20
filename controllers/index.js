@@ -25,7 +25,7 @@ module.exports.controller = function(app) {
 
   app.post('/file', User.NeedLoginPOST, File.UploadFile);
   app.get('/file/ueditor', User.NeedLoginGET, function(req, res) {
-      res.send(request.params('fetch')?'updateSavePath(["默认路径"])':'');
+      res.send(req.param('fetch')?'updateSavePath(["默认路径"])':'');
   });
   app.post('/file/ueditor', User.NeedLoginPOST, File.UEditorUploadFile);
   app.post('/file/ueditor/fetch', User.NeedLoginPOST, function(req, res) {

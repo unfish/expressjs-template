@@ -3,7 +3,8 @@ var mongoose = require('mongoose')
       ,fs = require('fs')
       ,request = require('request')
       ,async = require('async')
-      ,Grid = require('gridfs-stream');
+      ,Grid = require('gridfs-stream')
+      ,multiparty = require('multiparty');
 var config = require('../libs/config');
 
 var gfs;
@@ -23,56 +24,68 @@ fileSchema = new Schema( {
     nolocal: {type:Boolean, default:false}
 });
 
+function GetMimeType(name) {
+    var pos = name.lastIndexOf('.')+1;
+    var ext = name.substr(pos, name.length-pos).toLowerCase();
+    switch (ext) {
+        case 'jpg':
+        case 'jpeg':
+            return 'image/jpeg';
+        case 'png':
+            return 'image/png';
+        case 'gif':
+            return 'image/gif';
+        case 'bmp':
+            return 'image/bmp';
+        default:
+            return 'application/octet-stream';
+    }
+}
+
 fileSchema.statics.UploadFile = function (req, res) {
-    if (req.files.file) {
-            var f = req.files.file;
-            var file = new File({filename:f.name, user:req.user.id, filesize:f.size, filemime:f.type});
+    var form = new multiparty.Form();
+    form.on('part', function(part) {
+        if (!part.filename) return;
+            
+            var size = part.byteCount - part.byteOffset;
+            var name = part.filename;
+            var file = new File({filename:name, user:req.user.id, filesize:size, filemime:GetMimeType(name)});
             file.save(function(err) {
                 if (err) {
                     res.send(err.message);
                 }else{
-                    var writestream = gfs.createWriteStream({_id:file.id, chunk_size: 1024*4, content_type: f.type});
-                    fs.createReadStream(f.path).pipe(writestream);
+                    var writestream = gfs.createWriteStream({_id:file.id, chunk_size: 1024*4, content_type: file.filemime});
+                    part.pipe(writestream);
                     writestream.on('close', function (result) {
-                        fs.unlink(f.path, function(err) {
-                            if (err) {
-                                res.send(err.message);
-                            }else{
-                                res.send(file.id);
-                            }
-                        });
+                        res.send(file.id);
                     });
                 }
             });
-    }else{
-        res.send('没有找到文件');
-    }
+    });
+    form.parse(req);
 };
 
 fileSchema.statics.UEditorUploadFile = function (req, res) {
-    if (req.files.upfile) {
-            var f = req.files.upfile;
-            var file = new File({filename:f.name, user:req.user.id, filesize:f.size, filemime:f.type});
+    var form = new multiparty.Form();
+    form.on('part', function(part) {
+        if (!part.filename) return;
+            
+            var size = part.byteCount - part.byteOffset;
+            var name = part.filename;
+            var file = new File({filename:name, user:req.user.id, filesize:size, filemime:GetMimeType(name)});
             file.save(function(err) {
                 if (err) {
-                    res.send({state:err.message});
+                    res.send(err.message);
                 }else{
-                    var writestream = gfs.createWriteStream({_id:file.id, chunk_size: 1024*4, content_type: f.type});
-                    fs.createReadStream(f.path).pipe(writestream);
+                    var writestream = gfs.createWriteStream({_id:file.id, chunk_size: 1024*4, content_type: file.filemime});
+                    part.pipe(writestream);
                     writestream.on('close', function (result) {
-                        fs.unlink(f.path, function(err) {
-                            if (err) {
-                                res.send({state:err.message});
-                            }else{
-                                res.send({url:'/file/' + file.id, title:f.name, original:f.name, state:'SUCCESS'});
-                            }
-                        });
+                        res.send({url:'/file/' + file.id+'/'+name, title:name, original:name, state:'SUCCESS'});
                     });
                 }
             });
-    }else{
-        res.send('没有找到文件');
-    }
+    });
+    form.parse(req);
 };
 
 fileSchema.statics.GetFile = function (req, res) {

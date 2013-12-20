@@ -1,8 +1,6 @@
 var cheerio = require("cheerio");
 var sleep = require('sleep');
 var async = require('async');
-var cheerio = require('cheerio');
-var sleep = require('sleep');
 var moment = require('moment');
 
 var Topic = require('../../models/topic').Topic;
