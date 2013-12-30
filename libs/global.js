@@ -49,12 +49,12 @@ module.exports = function() {
                     });\
                 });\
             </script>";}
-            ,UsePLUpload:function(fieldName, defaultValue) {
+            ,UsePLUpload:function(fieldName, id, name) {
                 return "\
                 <script type='text/javascript' src='/javascripts/plupload/plupload.full.min.js'></script>\
                 <script type='text/javascript'>\
                     $(function(){\
-                        SetupPLUploadJS('"+fieldName+"','"+(defaultValue||'')+"');\
+                        SetupPLUploadJS('"+fieldName+"','"+(id||'')+"','"+(name||'')+"');\
                     });\
                 </script>";}
             ,GetRandomWords:function() {
