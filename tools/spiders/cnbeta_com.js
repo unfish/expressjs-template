@@ -7,7 +7,7 @@ var Topic = require('../../models/topic').Topic;
 var page = 0;
 var finishCallBack;
 
-var startUrl = "http://www.cnbeta.com/more.htm?jsoncallback=jQuery18009726221987511963_1387093008314&type=all&page=1";
+var startUrl = "http://www.cnbeta.com/more?jsoncallback=jQuery180005425712326541543_1446532649292&type=all&page=1&csrf_token=426cfc839060dc872341296512752f275a2d8ba0&_=1446532694806";
 
 module.exports.RunCatch = function(_finishCallBack) {
     finishCallBack = _finishCallBack;
@@ -27,10 +27,10 @@ function ProcessListPage(data) {
             //找到列表，从中取出每一条标题和链接
             async.eachSeries(json.result.list,function(li, callback) {
               var href = 'http://www.cnbeta.com'+li.url_show;
-              var title = li.title_show;
-              var logo = li.logo;
-              var summary = li.hometext_show_short;
-              var date = moment(li.time);
+              var title = li.title;
+              var logo = li.thumb;
+              var summary = li.hometext;
+              var date = moment(li.inputtime);
               console.log("["+title+"]("+href+")");
               if (href.indexOf('http:')==0) {
                   //检查链接是否抓过，并保存新页面信息
@@ -77,7 +77,7 @@ function ProcessListPage(data) {
                 cb();
             }else{
                 //找到下一页，递归抓取
-                var next = 'http://www.cnbeta.com/more.htm?jsoncallback=jQuery18009726221987511963_1387093008314&type=all&page='+page;
+                var next = 'http://www.cnbeta.com/more?jsoncallback=jQuery180005425712326541543_1446532649292&type=all&page='+page+'&csrf_token=426cfc839060dc872341296512752f275a2d8ba0&_=1446532694806';
                 StartDownload(next);
             }
         }
@@ -88,13 +88,13 @@ function ProcessListPage(data) {
     });
 }
 
-function jQuery18009726221987511963_1387093008314(obj) {
+function jQuery180005425712326541543_1446532649292(obj) {
     return obj;
 }
 //处理单个页面的内容解析
 function ProcessArticle(art, callback) {
     if (art.FullHtml) {
-        var $ = cheerio.load(art.FullHtml);
+        var $ = cheerio.load(art.FullHtml,{decodeEntities: false});
         art.content = $.html($('div.introduction p'))+$('div.content').html();
         //分拆各个字段
     }

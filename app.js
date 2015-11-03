@@ -4,6 +4,15 @@
  */
 
 var express = require('express');
+var cookieParser = require('cookie-parser')
+var errorhandler = require('errorhandler')
+var bodyParser = require('body-parser')
+var multer = require('multer');
+var serveStatic = require('serve-static')
+var logger = require('morgan');
+var methodOverride = require('method-override');
+var favicon = require('serve-favicon');
+
 var http = require('http');
 var path = require('path');
 var fs = require('fs');
@@ -16,15 +25,14 @@ var app = express();
 app.set('port', process.env.PORT || 3000);
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
-app.use(express.favicon(__dirname + '/public/images/favicon.ico'));
-app.use(express.logger('dev'));
-app.use(express.json());
-app.use(express.urlencoded());
-app.use(express.methodOverride());
-app.use(express.cookieParser('u$JeOIrBkuXotD5P'));
-app.use(express.session());
-app.use(app.router);
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(favicon(__dirname + '/public/images/favicon.ico'));
+app.use(logger('dev'));
+app.use(methodOverride());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(cookieParser('u$JeOIrBkuXotD5P'));
+app.use(serveStatic(path.join(__dirname, 'public')));
+var upload = multer({ dest: './uploads' });
 
 //set Site and Func global to views
 app.locals.Site = config.Site;
