@@ -7,9 +7,9 @@ module.exports.controller = function(app) {
     });
   
     app.post('/register', function(req, res) {
-        var user = new User({email:[], mobile:[], username:req.param('username'), password:req.param('password'), lastlogin_ip:req.ip});
-        user.email.push(req.param('email'));
-        user.mobile.push(req.param('mobile'));
+        var user = new User({email:[], mobile:[], username:req.body.username, password:req.body.password, lastlogin_ip:req.ip});
+        user.email.push(req.body.email);
+        user.mobile.push(req.body.mobile);
         user.validate(function(err) {
             if (err) {
                 res.send({success:false,data:err});
@@ -31,8 +31,8 @@ module.exports.controller = function(app) {
     });
     
     app.post('/login', function(req, res) {
-        var name = req.param('email');
-        var pass = req.param('password');
+        var name = req.body.email;
+        var pass = req.body.password;
         var data = {};
         if(name.length==0||name.length>20){
             data.email = '请输入您的邮箱或手机';
@@ -84,11 +84,11 @@ module.exports.controller = function(app) {
     
     app.post('/user/edit', User.NeedLoginPOST, function(req, res) {
         var user = req.user;
-        user.username=req.param('username');
-        user.email = req.param('email').split(',');
-        user.mobile = req.param('mobile').split(',');
-        if (req.param('password').length>0) {
-            user.password = req.param('password');
+        user.username=req.body.username;
+        user.email = req.body.email.split(',');
+        user.mobile = req.body.mobile.split(',');
+        if (req.body.password && req.body.password.length>0) {
+            user.password = req.body.password;
             user.HashPassword();
         }
         user.save(function (err) {

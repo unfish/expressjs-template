@@ -32,7 +32,7 @@ module.exports.controller = function(app) {
     });
   
     app.post('/topics', User.NeedLoginPOST, function(req, res) {
-        var topic = new Topic({title:req.param('title'), tags:req.param('tags').length>0?req.param('tags').split(','):null, content:req.param('content'), thumb:req.param('thumb').length>0?req.param('thumb'):null, author:req.user.id});
+        var topic = new Topic({title:req.body.title, tags:req.body.tags.length>0?req.body.tags.split(','):null, content:req.body.content, thumb:req.body.thumb.length>0?req.body.thumb:null, author:req.user.id});
         topic.save(function (err) {
             if (err){
                 res.send({success:false,data:err});
@@ -114,7 +114,7 @@ module.exports.controller = function(app) {
                 if (err || topic==null) {
                     res.send({success:false,data:{error:'文章不存在'}});
                 }else{
-                    var comment = new Comment({content:req.param('content'),topic:topic.id});
+                    var comment = new Comment({content:req.body.content,topic:topic.id});
                     comment.author=req.user?req.user.id:null;
                     comment.save(function (err) {
                         if (err){
