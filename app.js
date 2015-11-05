@@ -52,6 +52,12 @@ fs.readdirSync('./controllers').forEach(function (file) {
       route.controller(app);
   }
 });
+fs.readdirSync('./controllers/api').forEach(function (file) {
+  if(file.substr(-3) == '.js') {
+      route = require('./controllers/api/' + file);
+      route.controller(app);
+  }
+});
 fs.readdirSync('./controllers/admin').forEach(function (file) {
   if(file.substr(-3) == '.js') {
       route = require('./controllers/admin/' + file);

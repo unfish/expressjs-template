@@ -3,8 +3,7 @@ var mongoose = require('mongoose')
       ,fs = require('fs')
       ,request = require('request')
       ,async = require('async')
-      ,Grid = require('gridfs-stream')
-      ,multiparty = require('multiparty');
+      ,Grid = require('gridfs-stream');
 var config = require('../libs/config');
 
 var gfs;
@@ -42,50 +41,34 @@ function GetMimeType(name) {
     }
 }
 
-fileSchema.statics.UploadFile = function (req, res) {
-    var form = new multiparty.Form();
-    form.on('part', function(part) {
-        if (!part.filename) return;
-            
-            var size = part.byteCount - part.byteOffset;
-            var name = part.filename;
-            var file = new File({filename:name, user:req.user.id, filesize:size, filemime:GetMimeType(name)});
-            file.save(function(err) {
-                if (err) {
-                    res.send(err.message);
-                }else{
-                    var writestream = gfs.createWriteStream({_id:file.id, chunk_size: 1024*4, content_type: file.filemime});
-                    part.pipe(writestream);
-                    writestream.on('close', function (result) {
-                        res.send(file.id);
-                    });
-                }
-            });
+var SaveFile = function (req, res, success) {
+	if(req.file){
+		var file = new File({filename:req.file.filename, user:req.user.id, filesize:req.file.size, filemime:req.file.mimetype});
+		file.save(function(err) {
+		    if (err) {
+		        res.send(err.message);
+		    }else{
+		        var writestream = gfs.createWriteStream({_id:file.id, chunk_size: 1024*4, content_type: file.filemime});
+		        part.pipe(writestream);
+		        writestream.on('close', function (result) {
+		            success(file);
+		        });
+		    }
+		});
+	}else{
+		res.send('no file found!');
+	}
+}
+fileSchema.statics.UploadFile = function (req, res, next) {
+    SaveFile(req, res, function (file) {
+    	res.send(file.id);
     });
-    form.parse(req);
 };
 
-fileSchema.statics.UEditorUploadFile = function (req, res) {
-    var form = new multiparty.Form();
-    form.on('part', function(part) {
-        if (!part.filename) return;
-            
-            var size = part.byteCount - part.byteOffset;
-            var name = part.filename;
-            var file = new File({filename:name, user:req.user.id, filesize:size, filemime:GetMimeType(name)});
-            file.save(function(err) {
-                if (err) {
-                    res.send(err.message);
-                }else{
-                    var writestream = gfs.createWriteStream({_id:file.id, chunk_size: 1024*4, content_type: file.filemime});
-                    part.pipe(writestream);
-                    writestream.on('close', function (result) {
-                        res.send({url:'/file/' + file.id+'/'+name, title:name, original:name, state:'SUCCESS'});
-                    });
-                }
-            });
-    });
-    form.parse(req);
+fileSchema.statics.UEditorUploadFile = function (req, res, next) {
+	SaveFile(req, res, function (file) {
+		res.send({url:'/file/' + file.id+'/'+file.filename, title:file.filename, original:file.filename, state:'SUCCESS'});
+	});
 };
 
 fileSchema.statics.GetFile = function (req, res) {

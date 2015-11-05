@@ -1,6 +1,6 @@
 {
   "name": "application-name",
-  "version": "0.0.1",
+  "version": "1.0.1",
   "private": true,
   "scripts": {
     "start": "node app.js"
@@ -9,6 +9,7 @@
     "express": "3.4.6",
     "jade": "*",
     "bcrypt": "*",
+    "body-parser": "*",
     "request": "*",
     "mongoose" : "*",
     "mongoose-query-paginate":"*",
@@ -17,7 +18,13 @@
     "cheerio":"*",
     "sleep":"*",
     "moment":"*",
-    "multiparty":"*",
-    "eventproxy":"*"
+    "multer":"*",
+    "eventproxy":"*",
+    "errorhandler":"*",
+    "method-override":"*",
+    "morgan":"*",
+    "serve-favicon":"*",
+    "serve-static":"*",
+    "syncho":"*"
   }
 }

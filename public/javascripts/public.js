@@ -9,8 +9,9 @@ function SubmitForm(url, form, btn, callback) {
     $('#'+form+' div.input-group').removeClass('has-error');
     $.post(url, $('#'+form).serialize(), function (json) {
     	if(json.success){
-            callback(json.data);
+            callback(json);
     	}else{
+    	alert(JSON.stringify(json));
     	    if(json.data.hasOwnProperty('errors')){
         		for(var k in json.data.errors){
             		    $('#'+k).addClass('has-error');
@@ -45,7 +46,7 @@ function AjaxPost(url, param, btn, callback) {
     $(btn).html('请稍候...').attr('disabled','disabled');
     $.post(url, param, function (json) {
     	if(json.success){
-            callback(json.data);
+            callback(json);
     	}else{
     	    if (json.data.hasOwnProperty('error')) {
     	        alert(json.data.error);
@@ -68,3 +69,28 @@ function SetupPLUploadJS(field, value, name) {
     
     var uploader = new plupload.Uploader({        runtimes : 'html5,flash',        browse_button : field+'Btn',        container : 'thumb',        max_file_size : '2mb',        url: '/file',        flash_swf_url : '/javascripts/plupload/Moxie.swf',        filters : [            { title: "图片文件", extensions: "jpg,gif,png" }        ]    });    uploader.init();    uploader.bind('FilesAdded', function(up, files) {        $.each(files, function(i, file) {            $('#'+field+'Field').val(file.name + ' (' + plupload.formatSize(file.size) + ')').show();        });        up.refresh();        uploader.start();    });    uploader.bind('UploadProgress', function(up, file) {        $('#'+field+'Field').val(file.name + ' (' + plupload.formatSize(file.size) + ') '+file.percent + "%");    });        uploader.bind('Error', function(up, err) {        $('#'+field+'Field').html("错误: " + err.code + ", 内容: " + err.message + (err.file ? ", 文件: " + err.file.name : ""));        up.refresh();    });        uploader.bind('FileUploaded', function(up, file, resp) {        $('#'+field+'Field').val(resp.response);        $('#'+field+'Image').attr('src','/file/'+resp.response+'/'+file.name).show();    });
 }
+
+function GetPager(urlbase, res) {
+    var items = [];
+    items.push('<ul class="pagination pagination-sm pull-right">');
+    if(res.prev){
+        items.push('<li><a href="'+urlbase.replace('{}',res.prev)+'">&laquo;</a></li>');
+    }else{
+        items.push('<li class="disabled"><a href="javascript:;">&laquo;</a></li>');
+    }
+    for(var i in res.pages){
+        var p = res.pages[i];
+        if(p==res.current){
+            items.push('<li class="active"><a href="javascript:;">'+p+'</a></li>');
+        }else{
+            items.push('<li><a href="'+urlbase.replace('{}',p)+'">'+p+'</a></li>');
+        }
+    }
+    if(res.next){
+        items.push('<li><a href="'+urlbase.replace('{}',res.next)+'">&raquo;</a></li>');
+    }else{
+        items.push('<li class="disabled"><a href="javascript:;">&raquo;</a></li>');
+    }
+    items.push('</ul>');
+    return items.join('');
+};

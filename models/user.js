@@ -58,8 +58,9 @@ userSchema.statics.ValidateCookie = function (req, res, next) {
     var log = new AccessLog({
         method:req.route.method, query:req.query, form:req.body, userip:req.ip, originalUrl:req.originalUrl,fresh:req.fresh,stale:req.stale,xhr:req.xhr, referer:req.header('Referer'), userid:'', static:staticPath.test(req.originalUrl)
     });
-    if (req.cookies.loginCookie) {
-        var str = req.cookies.loginCookie.split('|');
+    var cookie = req.cookies.loginCookie || req.get('X-AuthToken');
+    if (cookie) {
+        var str = cookie.split('|');
         var uid = str[0];
         var salt = str[1];
         var pass = bcrypt.hashSync(uid+"u$JeOIrBkuXotD5P", salt);
