@@ -1,27 +1,26 @@
 extends ../layout
-    
+
 block content
-  #edittopic.content
+  #edittopic.content.hidden
       form#formTopic.formLarge
         #title.input-group
             span.input-group-addon 标　题
-            input.form-control(type="text",name="title",value="#{topic.title}")
+            input.form-control(type="text",name="title", v-model="title", placeholder="请输入标题")
         span.error-block
         #tags.input-group
             span.input-group-addon 关键字
-            input.form-control(type="text",name="tags",value="#{topic.tags}")
+            input.form-control(type="text",name="tags", v-model="tags", placeholder="请输入关键词")
         span.error-block
         #thumb.input-group
             span.input-group-addon 缩略图
-            input.form-control(type="text",name="thumb",value="#{topic.thumb}")
+            input.form-control(type="text",name="thumb", v-model="thumb._id", placeholder="请上传缩略图")
         span.error-block
         #content.input-group
-            textarea#txtContent.form-control(name="content",style="height:300px")= topic.content
+            textarea#txtContent.form-control(name="content",style="height:300px", v-model="content")
         span.error-block
         p
-        button.btn.btn-primary.btn-block(onclick="SubmitForm('/topic/#{topic.id}','formTopic',this,function(id){location.href='/topic/'+id;});return false;") 保存
+        button.btn.btn-primary.btn-block#btnSave 保存
         span.error-block
 
 block script
-    !=Func.UsePLUpload('thumb', topic.thumb==null?'':topic.thumb.id,topic.thumb==null?'':topic.thumb.filename)
-    !=Func.UseUEditor('txtContent')
+    include edit_js.jade

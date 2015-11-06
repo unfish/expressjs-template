@@ -5,7 +5,6 @@ var User = require('../../models/user');
 var t = require('../../models/topic'),
     Topic = t.Topic,
     Comment = t.Comment;
-var Pager = require('../../libs/pager');
 
 module.exports.controller = function(app) {
 

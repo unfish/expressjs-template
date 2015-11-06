@@ -7,7 +7,7 @@ block content
         | &nbsp;&nbsp;&nbsp;&nbsp;最后回复：
         span.timeSpan {{topic.comment_at}}
         | &nbsp;&nbsp;&nbsp;&nbsp;
-        span.tags {{topic.tags.join(',')}}
+        span.tags {{topic.tags}}
         | &nbsp;&nbsp;&nbsp;&nbsp;作者：
         span.author {{topic.author.username}}
         | &nbsp;&nbsp;&nbsp;&nbsp;
@@ -18,43 +18,19 @@ block content
         p {{{topic.content}}}
         hr
         #comments.list-group
-                div.list-group-item(v-for="c in comments", id='{{c._id}}')
+                div.list-group-item(v-for="c in comments", id='{{c._id}}', transition='expand')
                     h4.list-group-item-heading {{c.content}}
                     p.list-group-item-text
                         span.timeSpan {{c.created_at}}
-                        button.btn.btn-xs.btn-danger(onclick="return DeleteComment('{{c._id}}');") 删除
+                        button.btn.btn-xs.btn-danger.btnDelete(id='{{c._id}}') 删除
         form#formComment.formLarge
             #content.input-group
                 span.input-group-addon 评　论
                 textarea.form-control(name="content",rows="4")
             span.error-block
             p
-            button.btn.btn-primary(onclick="SaveComment(this);return false;") 添加评论
+            button.btn.btn-primary#btnSave 添加评论
             span.error-block
 
 block script
-    script(type='text/javascript').
-        function SaveComment(btn){
-            SubmitForm('/api/topic/#{id}/comments','formComment',btn, function(res){
-                vue.comments.push(res.result);
-                $('#formComment')[0].reset();
-            });
-            return false;
-        }
-        function DeleteComment(id){
-            return false;
-        }
-        var vue;
-        $(function(){
-            $.get('/api/topic/#{id}', function(res){
-        	    vue = new Vue({
-        		    el:'#topic',
-                    data:res.result
-        		});
-        		$('#topic').removeClass('hidden');
-        		$('.timeSpan').each(function(){
-        		    $(this).html(moment($(this).html()).format('YYYY-MM-DD HH:mm'));
-        		});
-        	});
-        });
-        
+    include topic_js.jade

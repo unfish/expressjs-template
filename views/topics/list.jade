@@ -4,7 +4,7 @@ block content
   #topiclist.content.hidden
         .media(v-for="t in topics")
             a.pull-left(href='/topic/{{t._id}}')
-                .media-object(style='background-image:url(/file/{{t.thumb._id}}/{{t.thumb.filename}});')
+                .media-object(v-thumbimage='t')
             div.media-body
                 h4.media-heading
                     a(href='/topic/{{t._id}}') {{t.title}}
@@ -15,17 +15,4 @@ block content
         {{{pager}}}
         
 block script
-    script(type='text/javascript').
-        $(function(){
-            $.get('/api/topics', {type:'#{type}', page:#{page}},function(res){
-        	    new Vue({
-        		    el:'#topiclist',
-                    data:{topics:res.result.results, pager:GetPager('?page={}', res.result)}
-        		});
-        		$('#topiclist').removeClass('hidden');
-        		$('.timeSpan').each(function(){
-        		    $(this).html(moment($(this).html()).format('YYYY-MM-DD HH:mm'));
-        		});
-        	});
-        });
-        
+    include list_js.jade

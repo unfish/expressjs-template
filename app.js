@@ -7,7 +7,6 @@ var express = require('express');
 var cookieParser = require('cookie-parser')
 var errorhandler = require('errorhandler')
 var bodyParser = require('body-parser')
-var multer = require('multer');
 var serveStatic = require('serve-static')
 var logger = require('morgan');
 var methodOverride = require('method-override');
@@ -32,7 +31,6 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser('u$JeOIrBkuXotD5P'));
 app.use(serveStatic(path.join(__dirname, 'public')));
-var upload = multer({ dest: './uploads' });
 
 //set Site and Func global to views
 app.locals.Site = config.Site;

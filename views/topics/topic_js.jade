@@ -1,0 +1,36 @@
+script(type='text/javascript').
+    require(['jquery', 'vue', 'pager', 'moment', 'ajax'], function ($, Vue, pager, moment, ajax) {
+        function SaveComment(btn){
+            ajax.SubmitForm('/api/topic/#{id}/comments','formComment',btn, function(res){
+                vue.comments.push(res.result);
+                $('#formComment')[0].reset();
+            });
+            return false;
+        }
+        function DeleteComment(id, btn){
+            ajax.AjaxDelete('/api/topic/#{id}/comment/'+id, {}, btn, function(res){
+                for(var i in vue.comments){
+                    if(vue.comments[i]._id===id){
+                        vue.comments.splice(i,1);
+                        break;
+                    }
+                }
+            });
+            return false;
+        }
+        $(document).on('click', '.btnDelete', function(e){DeleteComment($(e.target).attr('id'), e.target);});
+        $(document).on('click', '#btnSave', function(e){SaveComment(e.target);});
+        var vue;
+        $(function(){
+            $.get('/api/topic/#{id}', function(res){
+        	    vue = new Vue({
+        		    el:'#topic',
+                    data:res.result
+        		});
+        		$('#topic').removeClass('hidden');
+        		$('.timeSpan').each(function(){
+        		    $(this).html(moment($(this).html()).format('YYYY-MM-DD HH:mm'));
+        		});
+        	});
+        });
+    });

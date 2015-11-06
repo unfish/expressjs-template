@@ -1,7 +1,7 @@
 extends ../layout
 
 block content
-  #addtopic.content
+  #addtopic.content.hidden
       form#formTopic.formLarge
         #title.input-group
             span.input-group-addon 标　题
@@ -19,9 +19,8 @@ block content
             textarea#txtContent.form-control(name="content",style="height:300px")
         span.error-block
         p
-        button.btn.btn-primary.btn-block(onclick="SubmitForm('/topics','formTopic',this,function(id){location.href='/topic/'+id;});return false;") 保存
+        button.btn.btn-primary.btn-block#btnSave 保存
         span.error-block
 
 block script
-    !=Func.UsePLUpload('thumb', '', '')
-    !=Func.UseUEditor('txtContent')
+    include add_js.jade

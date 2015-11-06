@@ -3,8 +3,8 @@ html
   head
     meta(name="viewport",content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no")
     title= pageTitle?(pageTitle+' - '+Site.Title):Site.Title
-    link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css', integrity='sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==', crossorigin='anonymous')
-    link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css', integrity='sha384-aUGj/X2zp5rLCbBxumKTCw2Z50WgIr1vs/PFN4praOTvYXWlVyh2UtNUU0KAUhAX', crossorigin='anonymous')
+    link(rel='stylesheet', href='/stylesheets/bootstrap.min.css')
+    link(rel='stylesheet', href='/stylesheets/bootstrap-theme.min.css')
     link(rel='stylesheet', href='/stylesheets/bootstrap-docs.css')
     link(rel='stylesheet', href='/stylesheets/style.css')    
     script.
@@ -68,8 +68,8 @@ html
             p 模板基于 <a href="http://getbootstrap.com/" target="_blank">Bootstrap</a> 文档页面制作，感谢 <a href="http://twitter.com/mdo" target="_blank">@mdo</a> 和 <a href="http://twitter.com/fat" target="_blank">@fat</a>
             p 整站程序基于nodejs+express+mongoose，完整源代码开放，基于<a href="http://www.apache.org/licenses/LICENSE-2.0" target="_blank">Apache License v2.0</a>协议。源码可以在这里下载：<a href="https://github.com/unfish/expressjs-template" target="_blank">https://github.com/unfish/expressjs-template</a>.
             
-    script(type='text/javascript', src='https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js')
-    script(type='text/javascript', src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js',integrity='sha512-K1qjQ+NcF2TYO/eI3M6v8EiNYZfA95pQumfvcVrTHtwQVDG+aHRqLi/ETn2uB+1JqwYqVG3LIvdm9lj6imS/pQ==', crossorigin='anonymous')
+    script(type='text/javascript', src='/javascripts/jquery-2.1.4.min.js')
+    script(type='text/javascript', src='/javascripts/bootstrap.min.js')
     script(type='text/javascript', src='/javascripts/moment_langs.min.js')
     script(type='text/javascript', src='/javascripts/public.js')
     script(type='text/javascript',src='/javascripts/admin.js')

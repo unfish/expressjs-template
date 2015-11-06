@@ -7,6 +7,9 @@ form.formLarge{
 div.input-group{
     margin: 8px 0 0 0;
 }
+.edui-default{
+    height: auto;
+}
 span.error-block{
     color: #a94442;font-size: 12px;display: none;
 }
@@ -15,4 +18,12 @@ div.edui-default{
 }
 .bs-content .media-object{
     width: 100px;height: 100px;overflow: hidden;background-repeat: no-repeat;background-size: cover;background-position: center;border: 1px solid #bbdaef;
+}
+
+/* always present */
+.expand-transition {
+  transition: all .3s ease;
+}
+.expand-enter, .expand-leave {
+  opacity: 0;
 }

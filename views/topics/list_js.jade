@@ -1,0 +1,20 @@
+script(type='text/javascript').
+    require(['jquery', 'vue', 'pager', 'moment'], function ($, Vue, pager, moment) {
+          Vue.directive('thumbimage', function (t) {
+              if(t.thumb){
+                  this.el.style.backgroundImage = 'url(/file/'+t.thumb._id+'/'+t.thumb.filename+')';
+              }
+          })
+          $(function(){
+              $.get('/api/topics', {type:'#{type}', page:#{page}},function(res){
+          	    new Vue({
+          		    el:'#topiclist',
+                      data:{topics:res.result.results, pager:pager.GetPager('?page={}', res.result)}
+          		});
+          		$('#topiclist').removeClass('hidden');
+          		$('.timeSpan').each(function(){
+          		    $(this).html(moment($(this).html()).format('YYYY-MM-DD HH:mm'));
+          		});
+          	});
+          });   
+    });

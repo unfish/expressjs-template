@@ -1,11 +1,3 @@
-require('mongoose-query-paginate');
-var User = require('../models/user');
-var t = require('../models/topic'),
-    Topic = t.Topic,
-    Comment = t.Comment;
-var File = require('../models/file');
-var Pager = require('../libs/pager');
-var Sync = require('syncho');
 
 module.exports.controller = function(app) {
   app.get('/', function(req, res) {

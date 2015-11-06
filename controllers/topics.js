@@ -1,12 +1,4 @@
-var mongoose = require('mongoose')
-      ,Schema = mongoose.Schema;
-require('mongoose-query-paginate');
 var User = require('../models/user');
-var t = require('../models/topic'),
-    Topic = t.Topic,
-    Comment = t.Comment;
-var Pager = require('../libs/pager');
-var Sync = require('syncho');
 
 module.exports.controller = function(app) {
     app.get('/topics', function(req, res) {

@@ -43,16 +43,17 @@ function GetMimeType(name) {
 
 var SaveFile = function (req, res, success) {
 	if(req.file){
-		var file = new File({filename:req.file.filename, user:req.user.id, filesize:req.file.size, filemime:req.file.mimetype});
+		var file = new File({filename:req.file.originalname, user:req.user.id, filesize:req.file.size, filemime:req.file.mimetype});
 		file.save(function(err) {
 		    if (err) {
 		        res.send(err.message);
 		    }else{
 		        var writestream = gfs.createWriteStream({_id:file.id, chunk_size: 1024*4, content_type: file.filemime});
-		        part.pipe(writestream);
-		        writestream.on('close', function (result) {
-		            success(file);
-		        });
+                writestream.on('close', function (result) {
+                    success(file);
+                });
+		        writestream.write(req.file.buffer);
+		        writestream.end();
 		    }
 		});
 	}else{

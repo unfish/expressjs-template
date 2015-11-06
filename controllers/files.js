@@ -1,10 +1,11 @@
 var File = require('../models/file');
 var multer  = require('multer');
-var upload = multer({ dest: './uploads/' });
+var storage = multer.memoryStorage()
+var upload = multer({ storage: storage })
 
 module.exports.controller = function(app) {
-	app.post('/file', User.NeedLoginPOST, upload.single('avatar'), File.UploadFile);
-	app.post('/file/ueditor', upload.single('avatar'), User.NeedLoginPOST, File.UEditorUploadFile);
+	app.post('/file', User.NeedLoginPOST, upload.single('file'), File.UploadFile);
+	app.post('/file/ueditor', upload.single('upfile'), User.NeedLoginPOST, File.UEditorUploadFile);
 	app.get('/file/ueditor', User.NeedLoginGET, function(req, res) {
 		res.send(req.param('fetch')?'updateSavePath(["默认路径"])':'');
 	});

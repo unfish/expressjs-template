@@ -2,7 +2,6 @@ var mongoose = require('mongoose');
 require('mongoose-query-paginate');
 var EventProxy = require('eventproxy');
 var User = require('../../models/user');
-var Pager = require('../../libs/pager');
 
 module.exports.controller = function(app) {
 
