@@ -20,5 +20,15 @@ block content
             input.form-control(type="password",name="password")
         span.error-block
         p
-        button.btn.btn-primary.btn-block(onclick="SubmitForm('/register','formRegister',this,function(id){location.href='/login';});return false;") 注册新用户
+        button.btn.btn-primary.btn-block#btnSave 注册新用户
         span.error-block
+
+block script
+    script(type='text/javascript').
+        require(['jquery', 'ajax'], function ($, ajax) {
+            $(function(){
+                $(document).on('click', '#btnSave', function(e){
+                    ajax.SubmitForm('/api/user/register','formRegister',e.target,function(json){location.href='/login';});
+                });
+            });
+        });

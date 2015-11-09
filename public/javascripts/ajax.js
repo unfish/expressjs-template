@@ -1,18 +1,18 @@
 define(['jquery'], function ($) {
-    return {
-        ajaxError:function (jqXHR, textStatus, errorThrown ) {
-            alert( "服务器连接失败，"+errorThrown.message );
-        },
-        responseError:function (json) {
-            if (typeof(json.error)==='string') {
-                alert(json.error);
-            }else{
-                for(var k in json.error){
-                	    $('#'+k).addClass('has-error');
-                	    $('#'+k).next().html(json.error[k]).show();
-                }
+    function ajaxError(jqXHR, textStatus, errorThrown) {
+        alert( "服务器连接失败，"+errorThrown.message );
+    }
+    function responseError(json) {
+        if (typeof(json.error)==='string') {
+            alert(json.error);
+        }else{
+            for(var k in json.error){
+            	    $('#'+k).addClass('has-error');
+            	    $('#'+k).next().html(json.error[k]).show();
             }
-        },
+        }
+    }
+    return {
         SubmitForm:function (url, form, btn, callback, put) {
             $('#'+form+' span.error-block').hide();
             $('#'+form+' div.input-group').removeClass('has-error');
@@ -30,10 +30,10 @@ define(['jquery'], function ($) {
             	if(json.success){
                     callback(json);
             	}else{
-            	    this.responseError(json);
+            	    responseError(json);
             	}
             }, 'json')
-            .fail(this.ajaxError)
+            .fail(ajaxError)
             .always(function() {
                 $(btn).html(btnTitle).removeAttr('disabled');
             });
@@ -47,10 +47,10 @@ define(['jquery'], function ($) {
                 	if(json.success){
                         callback(json);
                 	}else{
-                	    this.responseError(json);
+                	    responseError(json);
                 	}
                 })
-                .fail(this.ajaxError)
+                .fail(ajaxError)
                 .always(function() {
                     $(btn).html(btnTitle).removeAttr('disabled');
                 });
@@ -64,10 +64,10 @@ define(['jquery'], function ($) {
                 	if(json.success){
                         callback(json);
                 	}else{
-                	    this.responseError(json);
+                	    responseError(json);
                 	}
                 })
-                .fail(this.ajaxError)
+                .fail(ajaxError)
                 .always(function() {
                     $(btn).html(btnTitle).removeAttr('disabled');
                 });

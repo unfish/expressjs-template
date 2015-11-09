@@ -36,28 +36,7 @@ var randomWords = [
 
 module.exports = function() {
     return {
-        Func:{UseUEditor:function(txtId) {
-            return "\
-            <script type='text/javascript' src='/javascripts/ueditor/ueditor.config.js'></script>\
-            <script type='text/javascript' src='/javascripts/ueditor/ueditor.all.min.js'></script>\
-            <script type='text/javascript'>\
-                $(function(){\
-                    var editor = new UE.ui.Editor();\
-                    editor.render('"+txtId+"');\
-                    editor.addListener('contentchange',function(){\
-                        this.sync('"+txtId+"');\
-                    });\
-                });\
-            </script>";}
-            ,UsePLUpload:function(fieldName, id, name) {
-                return "\
-                <script type='text/javascript' src='/javascripts/plupload/plupload.full.min.js'></script>\
-                <script type='text/javascript'>\
-                    $(function(){\
-                        SetupPLUploadJS('"+fieldName+"','"+(id||'')+"','"+(name||'')+"');\
-                    });\
-                </script>";}
-            ,GetRandomWords:function() {
+        Func:{GetRandomWords:function() {
                 var vNum = Math.random();
                 vNum = Math.round(vNum*randomWords.length)
                 return randomWords[vNum];

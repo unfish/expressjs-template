@@ -1,6 +1,5 @@
 var mongoose = require('mongoose');
 require('mongoose-query-paginate');
-var EventProxy = require('eventproxy');
 var User = require('../../models/user');
 
 module.exports.controller = function(app) {

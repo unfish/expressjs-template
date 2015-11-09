@@ -1,6 +1,5 @@
 var mongoose = require('mongoose');
 require('mongoose-query-paginate');
-var EventProxy = require('eventproxy');
 var User = require('../../models/user');
 var t = require('../../models/topic'),
     Topic = t.Topic,

@@ -12,5 +12,15 @@ block content
             input.form-control(type="password",name="password")
         span.error-block
         p
-        button.btn.btn-primary.btn-block(onclick="SubmitForm('/login','formLogin',this,function(){location.href='/';});return false;") 登录
+        button.btn.btn-primary.btn-block#btnSave 登录
         span.error-block
+        
+block script
+    script(type='text/javascript').
+        require(['jquery', 'ajax'], function ($, ajax) {
+            $(function(){
+                $(document).on('click', '#btnSave', function(e){
+                    ajax.SubmitForm('/api/user/login','formLogin',e.target,function(json){location.href='/';});
+                });
+            });
+        });
