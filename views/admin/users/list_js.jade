@@ -1,0 +1,18 @@
+script(type='text/javascript').
+    require(['jquery', 'vue', 'pager', 'moment', 'ajax'], function ($, Vue, pager, moment, ajax) {
+          $(function(){
+              $.get('/api/users', {type:'new', page:#{page}},function(res){
+          	    new Vue({
+          		    el:'.bs-content',
+                    data:{topics:res.result.results, pager:pager.GetPager('?page={}', res.result)}
+          		});
+          		$(document).on('click', '.btn-danger', function(e){
+          		    var tr = $(e.target).parent().parent();
+          		    ajax.AjaxDelete('/api/user/'+tr.attr('id'), {}, e.target, function(){tr.remove();});
+          		});
+          		$('.timeSpan').each(function(){
+          		    $(this).html(moment($(this).html()).format('YYYY-MM-DD HH:mm'));
+          		});
+          	});
+          });   
+    });

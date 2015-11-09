@@ -23,7 +23,7 @@ AccessLog = conn.model('AccessLog', accessLogSchema);
 userSchema = new Schema( {
     email: {type:[String],required:[true,"请输入您的邮箱"],unique:true,validate:[{validator:EmailArrayFormatValidator,msg:'请输入您的邮箱地址'},{validator:buildUniqueValidator('email'),msg:'这个邮箱已经被注册了'}]},
     mobile: {type:[String],unique:true,validate:[{validator:MobileArrayFormatValidator,msg:'请输入您的手机号'},{validator:buildUniqueValidator('mobile'),msg:'这个手机已经被注册了'}]},
-    username: {type:String,required:[true,'请输入您的姓名']},
+    username: {type:String},
     password: {type:String,required:[true,'请输入登录密码']},
     salt: String,
     isAdmin: {type:Boolean,default:false},

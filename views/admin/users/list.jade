@@ -17,23 +17,17 @@ block content
                 th 最后登录
                 th 操作
         tbody
-            if users
-                each u in users
-                    tr(id='#{u.id}')
-                        td= u.username
-                        td= u.mobile
-                        td= u.email
-                        td
-                            span.timeSpan= u.created_at
-                        td
-                            span.timeSpan= u.updated_at
-                        td
-                            button.btn.btn-xs.btn-danger(onclick="return DeleteUser('#{u.id}')") 删除
-    != pager
+            tr(v-for="u in users", id='{{u.id}}')
+                td {{u.username}}
+                td {{u.mobile}}
+                td {{u.email}}
+                td
+                    span.timeSpan {{u.created_at}}
+                td
+                    span.timeSpan {{u.updated_at}}
+                td
+                    button.btn.btn-xs.btn-danger 删除
+    {{{pager}}}
 
 block script
-    script(type='text/javascript').
-        function DeleteUser(id){
-            AjaxPost('/admin/users/delete/'+id,{},this,function(){$('#'+id).remove();});
-            return false;
-        }
+    include list_js.jade

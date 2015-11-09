@@ -9,7 +9,7 @@ script(type='text/javascript').
               $.get('/api/topics', {type:'#{type}', page:#{page}},function(res){
           	    new Vue({
           		    el:'#topiclist',
-                      data:{topics:res.result.results, pager:pager.GetPager('?page={}', res.result)}
+                    data:{topics:res.result.results, pager:pager.GetPager('?page={}', res.result)}
           		});
           		$('#topiclist').removeClass('hidden');
           		$('.timeSpan').each(function(){

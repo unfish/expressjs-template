@@ -67,13 +67,30 @@ html
     footer.bs-footer(role="contentinfo")
             p 模板基于 <a href="http://getbootstrap.com/" target="_blank">Bootstrap</a> 文档页面制作，感谢 <a href="http://twitter.com/mdo" target="_blank">@mdo</a> 和 <a href="http://twitter.com/fat" target="_blank">@fat</a>
             p 整站程序基于nodejs+express+mongoose，完整源代码开放，基于<a href="http://www.apache.org/licenses/LICENSE-2.0" target="_blank">Apache License v2.0</a>协议。源码可以在这里下载：<a href="https://github.com/unfish/expressjs-template" target="_blank">https://github.com/unfish/expressjs-template</a>.
-            
-    script(type='text/javascript', src='/javascripts/jquery-2.1.4.min.js')
-    script(type='text/javascript', src='/javascripts/bootstrap.min.js')
-    script(type='text/javascript', src='/javascripts/moment_langs.min.js')
-    script(type='text/javascript', src='/javascripts/public.js')
-    script(type='text/javascript',src='/javascripts/admin.js')
+
+    script(type='text/javascript',src="/javascripts/require.js")
+    script(type='text/javascript').
+        require.config({
+            baseUrl: '/javascripts/',
+            paths: {
+                'jquery': 'jquery-2.1.4.min',
+                'bootstrap': 'bootstrap.min',
+                'vue': 'vue',
+                'pager':'pager',
+                'ajax':'ajax',
+                'moment':'moment_langs.min'
+            },
+            shim:{
+                'bootstrap':{deps:['jquery']}
+            }
+        });
+        require(['jquery','bootstrap'], function ($, bootstrap) {
+              
+        });
     if menu
         script(type='text/javascript').
-            $(function(){$('li.li#{menu[0]}').addClass('active');$('li.li#{menu[1]}').addClass('active');});
+            require(['jquery'], function ($) {
+                  $(function(){$('li.li#{menu[0]}').addClass('active');$('li.li#{menu[1]}').addClass('active');});
+            });
+            
     block script

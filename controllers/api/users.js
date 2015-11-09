@@ -37,7 +37,7 @@ module.exports.controller = function(app) {
             data.password = '请输入登录密码';
         }
         if(Object.keys(data).length>0){
-            res.send({success:false,data:data});
+            res.json(api.Resp(null,data));
         }else{
             User.findOne({$or:[{email:name},{mobile:name}]}).sort('-created_at').exec(function (err, user) {
                 if (err || user==null) {
@@ -53,8 +53,7 @@ module.exports.controller = function(app) {
                             user.lastlogin_ip=req.ip;
                             user.save(function (err) {
                                 if (err){
-                                    data.error = '保存出错，'+err.message;
-                                    res.json(api.Resp(null,data));
+                                    res.json(api.Resp(null,err));
                                 }else{
                                     user.GenCookie(function(err, cookie) {
                                         res.cookie('loginCookie', cookie, { maxAge: 1000*60*60*24*30 });
@@ -67,6 +66,20 @@ module.exports.controller = function(app) {
                 }
             });
         }
+    });
+
+    app.get('/api/users', function (req, res) {
+    	Sync(function () {
+    		try{
+    			var sort = '-created_at';
+    			var query = User.find({}).sort(sort);
+    			var page = req.query.page||1;
+    			var result = query.paginate.sync(query, {perPage: 20, delta: 3, page: page});
+    			res.json(api.Resp(result));
+    		}catch (error) {
+    			res.json(api.Resp(null,error));
+    		}
+    	});
     });
 
     app.post('/api/user/edit', User.NeedLoginPOST, function(req, res) {
@@ -87,4 +100,20 @@ module.exports.controller = function(app) {
         });
     });
 
+    app.del('/api/user/:id', User.NeedAdminPOST, function(req, res) {
+        var id = req.params.id;
+        if(id==null || id.length==0){
+            res.json(api.Resp(null,'参数错误'));
+        }else if(id==req.user.id){
+            res.json(api.Resp(null,'您不能删除自己的账号'));
+        }else{
+            User.findByIdAndRemove(id,function (err, user) {
+                if (err || user==null) {
+                    res.json(api.Resp(null,'用户不存在'));
+                }else{
+                    res.json(api.Resp(user.id));
+                }
+            });
+        }
+    });
 };

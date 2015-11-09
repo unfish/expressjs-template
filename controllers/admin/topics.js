@@ -8,11 +8,7 @@ var t = require('../../models/topic'),
 module.exports.controller = function(app) {
 
     app.get('/admin/topics', User.NeedAdminGET, function(req, res) {
-        var query = Topic.find({}).populate('author').sort('-created_on');
-        var page = req.query.page||1;
-        query.paginate({perPage: 20, delta: 3, page: page}, function(err, result) {
-            res.render('admin/topics/list',{ pageTitle: '文章列表', pageTips:'发表文章共10000条，昨日发表200条，今日发表100条', menu:['topics','topiclist'], topics: result.results, pager:Pager.GetPager('?page={}', result), error:err });
-        });
+        res.render('admin/topics/list',{ pageTitle: '文章列表', pageTips:'发表文章共10000条，昨日发表200条，今日发表100条', menu:['topics','topiclist'], page:req.query.page||1});
     });
 
     app.post('/admin/topics/delete/:id', User.NeedAdminPOST, function(req, res) {
